@@ -1,0 +1,6 @@
+{
+	"appId": "io.ionic.starter",
+	"appName": "qrcode",
+	"webDir": "www",
+	"bundledWebRuntime": false
+}
