@@ -7,6 +7,30 @@
 </ion-header>
 
 <ion-content>    
+
+  
+  <ion-card>
+    <ion-item href="#" class="ion-activated">
+      <ion-icon name="barcode-outline" slot="start"></ion-icon>
+      <ion-label>Barcode</ion-label>
+      <ion-badge  slot="end">{{photoService.barcode}}</ion-badge>
+    </ion-item>
+  
+    <ion-item href="#">
+      <ion-icon name="wine" slot="start"></ion-icon>
+      <ion-label>Latitude</ion-label>
+      <ion-badge  slot="end">{{photoService.latitude}}</ion-badge>
+    </ion-item>
+  
+    <ion-item class="ion-activated">
+      <ion-icon name="warning" slot="start"></ion-icon>
+      <ion-label>Longitude</ion-label>
+      <ion-badge  slot="end">{{photoService.longitude}}</ion-badge>
+    </ion-item>
+  
+  </ion-card>
+
+
       <ion-fab horizontal="center" vertical="center" slot="fixed">
         <ion-fab-button color="secondary">
           <ion-icon md="caret-forward" ios="chevron-forward-circle-outline"></ion-icon>
