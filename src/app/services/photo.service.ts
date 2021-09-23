@@ -12,7 +12,7 @@ import { Platform } from '@ionic/angular';
   providedIn: 'root'
 })
 
-export class PhotoService {
+export class API {
   latitude: any = 22; //latitude
   longitude: any = 33; //longitude
   barcode: any = 'Hallo Welt';
