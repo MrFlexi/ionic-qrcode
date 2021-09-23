@@ -27,6 +27,12 @@
       <ion-label>Longitude</ion-label>
       <ion-badge  slot="end">{{photoService.longitude}}</ion-badge>
     </ion-item>
+
+    <ion-item class="ion-activated">
+      <ion-icon name="warning" slot="start"></ion-icon>
+      <ion-label>NFC</ion-label>
+      <ion-badge  slot="end">{{photoService.nfc}}</ion-badge>
+    </ion-item>
   
   </ion-card>
 
@@ -36,13 +42,22 @@
           <ion-icon md="caret-forward" ios="chevron-forward-circle-outline"></ion-icon>
         </ion-fab-button>
         <ion-fab-list side="end">
-          <ion-fab-button (click)="addPhotoToGallery()">
+          <ion-fab-button (click)="getBarcode()">
             <ion-icon name="barcode-outline"></ion-icon>
           </ion-fab-button>
       
-          <ion-fab-button (click)="takePhoto()">
+          <ion-fab-button (click)="addPhotoToGallery()">
             <ion-icon name="camera-outline"></ion-icon>
           </ion-fab-button>
+
+          <ion-fab-button (click)="getNFC()">
+            <ion-icon name="scan-outline"></ion-icon>
+          </ion-fab-button>
+
+          <ion-fab-button (click)="getGPS()">
+            <ion-icon name="locate-outline"></ion-icon>
+          </ion-fab-button>
+
         </ion-fab-list>
       </ion-fab>
 

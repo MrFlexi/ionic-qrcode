@@ -15,7 +15,16 @@ export class Tab1Page {
     this.photoService.addNewToGallery();
   }
 
-  takePhoto() {
-     this.photoService.takePhoto();  
+  getBarcode() {
+    this.photoService.getBarcode();
   }
+
+  getNFC() {
+    this.photoService.getNFC();
+  }
+
+  getGPS() {
+    this.photoService.getLocation();
+  }
+
 }
