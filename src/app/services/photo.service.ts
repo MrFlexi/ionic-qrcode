@@ -6,6 +6,7 @@ import { Geolocation } from '@capacitor/geolocation';
 import { Filesystem, Directory } from '@capacitor/filesystem';
 import { Storage } from '@capacitor/storage';
 import { Platform } from '@ionic/angular';
+import { ToastController } from '@ionic/angular';
 
 
 @Injectable({
@@ -23,7 +24,7 @@ export class API {
 
 
 
-  constructor() {
+  constructor(private toastCtrl: ToastController) {
     this.getLocation();
   }
 
@@ -60,6 +61,15 @@ export class API {
     //                      tag => console.log(JSON.stringify(tag)),
     //                      err => console.log('Error reading tag', err)
     //);
+  }
+
+  async showToast(msg) {
+    let toast = await this.toastCtrl.create({
+      message: msg,
+      position: 'bottom',
+      duration: 2000
+    });
+    toast.present();
   }
 
 }
