@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { API } from '../services/photo.service';
 import * as Leaflet from 'leaflet';
+import { Socket } from 'ngx-socket-io';
 //import data  from 'geo.json';
 
 @Component({
@@ -12,11 +13,32 @@ export class Tab1Page {
   map: Leaflet.Map;
   layer: Leaflet.Layer;
   propertyList = [];
+  deviceList =''; 
+  message = '';
+  messages = [];
+  currentUser = '';
 
   myLines = [{ "type": "LineString", "coordinates": [[-100, 40], [-105, 45], [-110, 55]]},
               {"type": "LineString","coordinates": [[-105, 40], [-110, 45], [-115, 55]]}];
 
-  constructor(public myAPI: API) { }
+  constructor(public myAPI: API, private socket: Socket) { }
+
+
+  ngOnInit() {
+    this.socket.connect();
+ 
+    this.socket.emit('set-name', name);
+ 
+    this.socket.fromEvent('Devices').subscribe(data => {
+      this.deviceList = JSON.parse(data['DeviceList']);
+        this.myAPI.showToast('Devices received' + this.deviceList);
+    });
+ 
+    this.socket.fromEvent('message').subscribe(message => {
+      this.messages.push(message);
+    });
+  }
+
 
   ionViewDidEnter() {
 
@@ -67,6 +89,7 @@ export class Tab1Page {
 
   getBarcode() {
     this.myAPI.getBarcode();
+    this.socket.emit('test', name);
   }
 
   getNFC() {

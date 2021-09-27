@@ -3,9 +3,12 @@ import { Injectable } from '@angular/core';
 import { Camera, CameraResultType, CameraSource, Photo } from '@capacitor/camera';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 import { Geolocation } from '@capacitor/geolocation';
+import { ToastController } from '@ionic/angular';
 import { Filesystem, Directory } from '@capacitor/filesystem';
 import { Storage } from '@capacitor/storage';
 import { Platform } from '@ionic/angular';
+import { AndroidPermissions } from '@ionic-native/android-permissions';
+import { LocationAccuracy } from '@ionic-native/location-accuracy';
 
 
 @Injectable({
@@ -23,7 +26,7 @@ export class API {
 
 
 
-  constructor() {
+  constructor(private toastCtrl: ToastController) {
     this.getLocation();
   }
 
@@ -60,6 +63,15 @@ export class API {
     //                      tag => console.log(JSON.stringify(tag)),
     //                      err => console.log('Error reading tag', err)
     //);
+  }
+
+  async showToast(msg) {
+    let toast = await this.toastCtrl.create({
+      message: msg,
+      position: 'top',
+      duration: 2000
+    });
+    toast.present();
   }
 
 }
