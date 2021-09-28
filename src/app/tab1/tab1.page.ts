@@ -69,5 +69,6 @@ export class Tab1Page {
     markPoint.bindPopup('<p>Hallo</p>');
     this.map.addLayer(markPoint);
     this.map.setView([this.myAPI.latitude, this.myAPI.longitude], 16);
+    this.myAPI.showToast('GPS aquired')
   }
 }

@@ -7,28 +7,32 @@
 </ion-header>
 
 <ion-content>    
+  
+
+  
+  <ion-content [fullscreen]="true">
   <ion-card>
-    <ion-item href="#" class="ion-activated">
+    <ion-item class="ion-activated"  >
       <ion-icon name="barcode-outline" slot="start"></ion-icon>
       <ion-label>Barcode</ion-label>
-      <ion-badge  slot="end">{{myAPI.barcode}}</ion-badge>
+      <ion-badge  slot="end">{{myAPI.barcode.format}}</ion-badge>
+      <ion-badge  slot="end">{{myAPI.barcode.text}}</ion-badge>
     </ion-item>
   
-    <ion-item href="#">
-      <ion-icon name="wine" slot="start"></ion-icon>
-      <ion-label>Latitude</ion-label>
-      <ion-badge  slot="end">{{myAPI.latitude}}</ion-badge>
-    </ion-item>
-  
-    <ion-item class="ion-activated">
-      <ion-icon name="warning" slot="start"></ion-icon>
-      <ion-label>Longitude</ion-label>
+    <ion-item class="ion-activated" button (click)="getGPS()">
+      <ion-icon name="locate-outline" slot="start"></ion-icon>
+      <ion-label>Geo location</ion-label>
       <ion-badge  slot="end">{{myAPI.longitude}}</ion-badge>
+      <ion-badge  slot="end">{{myAPI.latitude}}</ion-badge>
     </ion-item>
       
   </ion-card>
 
+<<<<<<< HEAD
       <ion-fab horizontal="center" vertical="center" slot="fixed">
+=======
+      <ion-fab horizontal="center" vertical="center" slot="">
+>>>>>>> 27dfc84a78fb16d35bb7c9807adee5afb7f26ef2
         <ion-fab-button color="secondary">
           <ion-icon md="caret-forward" ios="chevron-forward-circle-outline"></ion-icon>
         </ion-fab-button>
@@ -56,7 +60,7 @@
         </ion-fab-list>
       </ion-fab>       
 
-      <div id="mapId" style="width: 100%; height: 50%">
+      <div id="mapId" style="width: 100%; height: 70%">
       </div>
       
  
