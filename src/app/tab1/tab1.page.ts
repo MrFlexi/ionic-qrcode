@@ -13,7 +13,6 @@ export class Tab1Page {
   map: Leaflet.Map;
   layer: Leaflet.Layer;
   propertyList = [];
-  deviceList =''; 
   message = '';
   messages = [];
   currentUser = '';
@@ -23,25 +22,11 @@ export class Tab1Page {
 
   constructor(public myAPI: API, private socket: Socket) { }
 
-
   ngOnInit() {
-    this.socket.connect();
- 
-    this.socket.emit('set-name', name);
- 
-    this.socket.fromEvent('Devices').subscribe(data => {
-      this.deviceList = JSON.parse(data['DeviceList']);
-        this.myAPI.showToast('Devices received' + this.deviceList);
-    });
- 
-    this.socket.fromEvent('message').subscribe(message => {
-      this.messages.push(message);
-    });
+    
   }
 
-
   ionViewDidEnter() {
-
     fetch('./assets/geo.json')
       .then(res => res.json())
       .then(data => {
@@ -52,31 +37,17 @@ export class Tab1Page {
   }
 
   leafletMap() {
-   
     this.map = new Leaflet.Map('mapId').setView([48.1365, 11.6825], 10);
-    
     Leaflet.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
       attribution: 'edupala.com'
     }).addTo(this.map);
 
-    
     //Leaflet.geoJSON().addData(this.myLines).addTo(this.map);
 
     // Set marker
     const markPoint = Leaflet.marker([48.094, 11.537]);
-    markPoint.bindPopup('<p>MrFlexi.</p>');    
+    markPoint.bindPopup('<p>MrFlexi.</p>');
     this.map.addLayer(markPoint);
-    
-
-
-
-    // Get Markers from JSOn File
-    //for (const property of this.propertyList) {
-    //  Leaflet.marker([property.lat, property.long]).addTo(this.map)
-    //    .bindPopup(property.city)
-    //    .openPopup();
-    //}
-
   }
 
   ionViewWillLeave() {
@@ -89,11 +60,6 @@ export class Tab1Page {
 
   getBarcode() {
     this.myAPI.getBarcode();
-    this.socket.emit('test', name);
-  }
-
-  getNFC() {
-    this.myAPI.getNFC();
   }
 
   getGPS() {

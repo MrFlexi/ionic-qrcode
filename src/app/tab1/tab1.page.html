@@ -1,15 +1,12 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      Take a photo
+      TechParade
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>    
-
-  
-  
   <ion-card>
     <ion-item href="#" class="ion-activated">
       <ion-icon name="barcode-outline" slot="start"></ion-icon>
@@ -35,6 +32,14 @@
         <ion-fab-button color="secondary">
           <ion-icon md="caret-forward" ios="chevron-forward-circle-outline"></ion-icon>
         </ion-fab-button>
+
+        <ion-fab-list side="top">
+          <ion-fab-button (click)="getNFC()">
+            <ion-icon name="cloud-download"></ion-icon>
+          </ion-fab-button>
+        </ion-fab-list>
+
+
         <ion-fab-list side="end">
           <ion-fab-button (click)="getBarcode()">
             <ion-icon name="barcode-outline"></ion-icon>
@@ -42,10 +47,6 @@
       
           <ion-fab-button (click)="addPhotoToGallery()">
             <ion-icon name="camera-outline"></ion-icon>
-          </ion-fab-button>
-
-          <ion-fab-button (click)="getNFC()">
-            <ion-icon name="scan-outline"></ion-icon>
           </ion-fab-button>
 
           <ion-fab-button (click)="getGPS()">
@@ -58,19 +59,5 @@
       <div id="mapId" style="width: 100%; height: 50%">
       </div>
       
-
-      <ion-list>
-        <ion-item *ngFor="let item of this.deviceList">
-          <ion-label>
-            <h2>{{item.device_id}}</h2>            
-          </ion-label>       
-          <ion-label>            
-            <h2>{{item.name}}</h2>            
-          </ion-label>       
-          <ion-label>            
-            <h2>{{item.sleep_time}}</h2>            
-          </ion-label>       
-        </ion-item>
-      </ion-list>
  
 </ion-content>
