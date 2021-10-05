@@ -9,6 +9,8 @@ import { Storage } from '@capacitor/storage';
 import { Platform } from '@ionic/angular';
 import { AndroidPermissions } from '@ionic-native/android-permissions';
 import { LocationAccuracy } from '@ionic-native/location-accuracy';
+import {HttpClient} from '@angular/common/http';
+import {HttpHeaders} from '@angular/common/http';
 
 
 @Injectable({
@@ -20,16 +22,32 @@ export class API {
   longitude: any = 33; //longitude
   barcode: any = 'Hallo Welt';
   nvcValue: any = 10101010;
+  cars: any;
+  detection: any;
 
   public photos: Photo[] = [];
   private ph:Photo;
 
-
-
-  constructor(private toastCtrl: ToastController) {
+  constructor(private toastCtrl: ToastController,
+              public httpClient: HttpClient) {
     this.getLocation();
   }
 
+  public getNumberOfCars() {
+
+    const httpOptions = {
+      headers: new HttpHeaders({
+          'Content-Type': 'application/json',
+      })};
+
+  this.cars = this.httpClient.get('https://api.szaroletta.de/get_numer_of_cars', httpOptions);
+
+  this.cars.subscribe(data => {
+                                  this.cars = data;
+                                  console.log('my data: ', data);
+                              }
+                      );
+  };
 
   public async getBarcode() {
     // Take a photo
@@ -41,13 +59,46 @@ export class API {
     });
   }
 
+ 
   public async addNewToGallery() {
     // Take a photo
-    const capturedPhoto = await Camera.getPhoto({
+    const image = await Camera.getPhoto({
       resultType: CameraResultType.Uri,
       source: CameraSource.Camera,
       quality: 100
     });
+   
+    console.log('Image webPath', image.webPath);
+    console.log('Image Path', image.path);
+    console.log('Data URL', image.dataUrl);
+
+    const response = await fetch(image.webPath);
+    const imgBlob = await response.blob();
+    console.log('data:', imgBlob);
+ 
+    this.uploadImage(imgBlob);
+  }
+
+  
+  public uploadImage(imageBlob) {
+    // Destination URL
+    const url = 'http://yolo.szaroletta.de/detect';
+
+    const payload = new FormData();
+    const dataOut = {
+                      deviceId: 'MrFlexi',
+                      type: 'Street',
+                    };
+
+    payload.append("dataOut",JSON.stringify(dataOut));          
+    payload.append('image', imageBlob, 'image.jpg');
+
+    this.detection = this.httpClient.post('http://yolo.szaroletta.de/detect',payload)
+    this.detection.subscribe(data => {
+                  this.detection = data;
+                  console.log('my detections: ', data);
+              }
+      );
   }
 
 

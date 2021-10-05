@@ -10,13 +10,20 @@ import { AppComponent } from './app.component';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 const config: SocketIoConfig = { url: 'http://85.209.49.65:5000', options: {} };
 
+import { HTTP } from '@ionic-native/http/ngx';
+import {HttpClient, HttpHandler, HttpClientModule} from '@angular/common/http';
+
+
+
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
-  imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule,
+  imports: [BrowserModule, 
+            HttpClientModule,
+            IonicModule.forRoot(), AppRoutingModule,
     SocketIoModule.forRoot(config)],
-  providers: [ 
-    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
+  providers: [ HttpClientModule, HttpClient,
+              { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
