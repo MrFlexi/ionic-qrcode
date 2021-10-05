@@ -19,12 +19,21 @@ export class Tab2Page {
       this.deviceList = JSON.parse(data['DeviceList']);
         this.myAPI.showToast('WebSocket received');
     });
+
+    this.socket.fromEvent('lastDetectedImage').subscribe(data => {
+      this.myAPI.lastDetectedImage = JSON.parse(data['lastDetectedImage']);
+        this.myAPI.showToast('WebSocket received' + this.myAPI.lastDetectedImage );
+    });
  
     //this.socket.fromEvent('message').subscribe(message => {
     //  this.messages.push(message);
     //});
   }
 
+
+  detectCars() {
+    this.myAPI.detectCars();
+  }
   getWebSocketData() {
     this.socket.emit('test', name);
   }

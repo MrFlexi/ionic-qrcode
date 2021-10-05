@@ -1,7 +1,7 @@
 <ion-header [translucent]="true">
   <ion-toolbar>   
     <ion-title>
-      MongoDB Device List
+      Park Slot Detection
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -17,14 +17,40 @@
     </ion-item>      
   </ion-card>
 
-  <ion-card>
-    <ion-card-content>
-      <ion-item>   
-        <ion-label>Last WebCam Image</ion-label>   
-        <ion-img src="http://api.szaroletta.de/get_last_image"></ion-img>      
-      </ion-item>
-    </ion-card-content>
-  </ion-card>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <div>
+          1 of 3         
+        </div>
+      </ion-col>
+      <ion-col>
+        <div>
+          <ion-img src="{{myAPI.lastDetectedImage}}" width="10%" height="10%" ></ion-img> 
+        </div>
+      </ion-col>
+      <ion-col>
+        <div>
+          <ion-list>
+            <ion-item *ngFor="let item of this.deviceList">
+              <ion-label>
+                <h2>{{item.device_id}}</h2>            
+              </ion-label>       
+              <ion-label>            
+                <h2>{{item.name}}</h2>            
+              </ion-label>       
+              <ion-label>            
+                <h2>{{item.sleep_time}}</h2>            
+              </ion-label>       
+            </ion-item>
+          </ion-list>
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  
+      
 
   <ion-fab horizontal="center" vertical="center" slot="fixed">
     <ion-fab-button color="secondary">
@@ -35,21 +61,12 @@
       <ion-fab-button (click)="getWebSocketData()">
         <ion-icon name="cloud-download"></ion-icon>
       </ion-fab-button>
+      <ion-fab-button (click)="detectCars()">
+        <ion-icon name="camera-outline"></ion-icon>
+      </ion-fab-button>
     </ion-fab-list>
   </ion-fab>       
   
-  <ion-list>
-    <ion-item *ngFor="let item of this.deviceList">
-      <ion-label>
-        <h2>{{item.device_id}}</h2>            
-      </ion-label>       
-      <ion-label>            
-        <h2>{{item.name}}</h2>            
-      </ion-label>       
-      <ion-label>            
-        <h2>{{item.sleep_time}}</h2>            
-      </ion-label>       
-    </ion-item>
-  </ion-list>
+  
 
 </ion-content>

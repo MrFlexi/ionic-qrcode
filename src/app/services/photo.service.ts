@@ -24,6 +24,7 @@ export class API {
   nvcValue: any = 10101010;
   cars: any;
   detection: any;
+  lastDetectedImage: any = "http://yolo.szaroletta.de/detected_images/last.jpg";
 
   public photos: Photo[] = [];
   private ph:Photo;
@@ -74,6 +75,23 @@ export class API {
 
     const response = await fetch(image.webPath);
     const imgBlob = await response.blob();
+    console.log('data:', imgBlob); 
+  }
+
+  public async detectCars() {
+    // Take a photo
+    const image = await Camera.getPhoto({
+      resultType: CameraResultType.Uri,
+      source: CameraSource.Camera,
+      quality: 100
+    });
+   
+    console.log('Image webPath', image.webPath);
+    console.log('Image Path', image.path);
+    console.log('Data URL', image.dataUrl);
+
+    const response = await fetch(image.webPath);
+    const imgBlob = await response.blob();
     console.log('data:', imgBlob);
  
     this.uploadImage(imgBlob);
@@ -90,14 +108,16 @@ export class API {
                       type: 'Street',
                     };
 
-    payload.append("dataOut",JSON.stringify(dataOut));          
+    payload.append("dataOut",JSON.stringify(dataOut));
     payload.append('image', imageBlob, 'image.jpg');
 
     this.detection = this.httpClient.post('http://yolo.szaroletta.de/detect',payload)
     this.detection.subscribe(data => {
                   this.detection = data;
                   console.log('my detections: ', data);
-              }
+                  this.lastDetectedImage = 'http://'+data['url'];
+                  console.log('new url: ', this.lastDetectedImage);
+                }
       );
   }
 
@@ -117,7 +137,7 @@ export class API {
   }
 
   async showToast(msg) {
-    let toast = await this.toastCtrl.create({
+    const toast = await this.toastCtrl.create({
       message: msg,
       position: 'top',
       duration: 2000

@@ -23,7 +23,6 @@ export class Tab1Page {
   constructor(public myAPI: API, private socket: Socket) { }
 
   ngOnInit() {
-    
   }
 
   ionViewDidEnter() {
