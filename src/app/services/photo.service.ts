@@ -13,6 +13,7 @@ import {HttpClient} from '@angular/common/http';
 import {HttpHeaders} from '@angular/common/http';
 
 
+
 @Injectable({
   providedIn: 'root'
 })
@@ -24,7 +25,11 @@ export class API {
   nvcValue: any = 10101010;
   cars: any;
   detection: any;
+  nomatim: any;
   lastDetectedImage: any = "http://yolo.szaroletta.de/detected_images/last.jpg";
+  geoLocation : any;
+  detectedObjects = [{className:"car", classCount:26},
+                      {className:"person", classCount:2}];
 
   public photos: Photo[] = [];
   private ph:Photo;
@@ -34,21 +39,6 @@ export class API {
     this.getLocation();
   }
 
-  public getNumberOfCars() {
-
-    const httpOptions = {
-      headers: new HttpHeaders({
-          'Content-Type': 'application/json',
-      })};
-
-  this.cars = this.httpClient.get('https://api.szaroletta.de/get_numer_of_cars', httpOptions);
-
-  this.cars.subscribe(data => {
-                                  this.cars = data;
-                                  console.log('my data: ', data);
-                              }
-                      );
-  };
 
   public async getBarcode() {
     // Take a photo
@@ -94,29 +84,62 @@ export class API {
     const imgBlob = await response.blob();
     console.log('data:', imgBlob);
  
-    this.uploadImage(imgBlob);
+    this.getLocation();
+    this.yoloImageDetection(imgBlob);
   }
 
   
-  public uploadImage(imageBlob) {
+  public yoloImageDetection(imageBlob) {
     // Destination URL
-    const url = 'http://yolo.szaroletta.de/detect';
+    const url = 'http://api.szaroletta.de/upload_and_detect';
 
     const payload = new FormData();
     const dataOut = {
                       deviceId: 'MrFlexi',
                       type: 'Street',
+                      latitude: this.latitude,
+                      longitude: this.longitude
                     };
 
-    payload.append("dataOut",JSON.stringify(dataOut));
+    payload.append('data',JSON.stringify(dataOut));
     payload.append('image', imageBlob, 'image.jpg');
 
-    this.detection = this.httpClient.post('http://yolo.szaroletta.de/detect',payload)
+    this.detection = this.httpClient.post(url,payload);
     this.detection.subscribe(data => {
                   this.detection = data;
                   console.log('my detections: ', data);
                   this.lastDetectedImage = 'http://'+data['url'];
+                  this.detectedObjects = data['detectedObjects'];
+                  this.geoLocation = data['geoLocation'];
                   console.log('new url: ', this.lastDetectedImage);
+                }
+      );
+  }
+
+  public reverseGeo() {
+    // Destination URL
+    const url = 'http://api.szaroletta.de/reverseGeo';
+
+    const httpOptions = {
+      headers: new HttpHeaders({
+          'Content-Type': 'application/json',
+      })};
+
+
+    const payload = new FormData();
+    const dataOut = {
+                      latitude: this.longitude,
+                      longitude: this.longitude
+                    };
+
+    payload.append('data',JSON.stringify(dataOut));
+
+    this.nomatim = this.httpClient.post(url,payload,httpOptions);
+    this.nomatim.subscribe(data => {
+                  this.nomatim = data;
+                  console.log('reverseGeo: ', data);
+                  this.geoLocation = data['geoLocation'];
+                  console.log('reverseGeo: ', this.nomatim);
                 }
       );
   }
@@ -128,13 +151,6 @@ export class API {
     this.longitude = position.coords.longitude;
   }
 
-  public async getNFC() {
-    //const flags = this.nfc.FLAG_READER_NFC_A | this.nfc.FLAG_READER_NFC_V;
-    //this.nvcValue = this.nfc.readerMode(flags).subscribe(
-    //                      tag => console.log(JSON.stringify(tag)),
-    //                      err => console.log('Error reading tag', err)
-    //);
-  }
 
   async showToast(msg) {
     const toast = await this.toastCtrl.create({
