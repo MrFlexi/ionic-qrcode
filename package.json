@@ -47,6 +47,8 @@
     "cordova-plugin-camera": "^6.0.0",
     "cordova-plugin-file-transfer": "^1.7.1",
     "cordova-plugin-request-location-accuracy": "^2.3.0",
+    "fabric": "^4.6.0",
+    "ionic-mqtt": "^1.1.5",
     "leaflet": "^1.7.1",
     "leaflet-ant-path": "^1.3.0",
     "ngx-socket-io": "^4.1.0",
