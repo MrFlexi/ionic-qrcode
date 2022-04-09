@@ -1,97 +1,178 @@
+<ion-content class="ion-padding">
+	<ion-slides>
+		<ion-slide>
+			<ion-card>
+				<ion-card-header>
+					<ion-card-subtitle>Diesel</ion-card-subtitle>
+					<ion-card-title>Br 218</ion-card-title>
+				</ion-card-header>
+
+				<ion-card-content>
+					<ion-row>
+						<ion-col>
+							<div>
+								<img src="src\assets\images\BR218.jpg" />
+							</div>
+						</ion-col>
+					</ion-row>
+
+					<ion-row>
+						<ion-col>
+							<div>
+								<ion-list>
+									<ion-item>
+										<ion-range min="0" max="100" step="10" snaps="true" ticks="true"
+											color="secondary">
+											<ion-icon size="small" slot="start" name="sunny"></ion-icon>
+											<ion-icon slot="end" name="sunny"></ion-icon>
+										</ion-range>
+									</ion-item>
+								</ion-list>
+							</div>
+						</ion-col>
+					</ion-row>
+
+					<ion-row>
+						<ion-col>
+							<div>
+								<ion-segment value="paid">
+									<ion-segment-button value="paid">
+										<ion-label>Back</ion-label>
+									</ion-segment-button>
+									<ion-segment-button value="free">
+										<ion-label>Stop</ion-label>
+									</ion-segment-button>
+									<ion-segment-button value="top">
+										<ion-label>Forward</ion-label>
+									</ion-segment-button>
+								</ion-segment>
+							</div>
+						</ion-col>
+					</ion-row>
+				</ion-card-content>
+			</ion-card>
+		</ion-slide>
 
 
-<ion-content [fullscreen]="true">
+		<ion-slide>
+			<ion-card>
+				<ion-card-header>
+					<ion-card-subtitle>Elecktro</ion-card-subtitle>
+					<ion-card-title>S-Bahn</ion-card-title>
+				</ion-card-header>
 
-  <ui5-shellbar	primary-title="MrFlexi Summer Sale"secondary-title="UI5" show-notifications notifications-count="22">
-	<ui5-avatar slot="profile" icon="customer">
-    <img src="../../assets/images/Foto.jpg" alt="Woman 1">
-  </ui5-avatar>
-	<img slot="logo" src="../../assets/images/logo.png"/>
-  <ui5-button icon="nav-back" slot="startButton"></ui5-button>
-  <ui5-input slot="searchField" placeholer="Enter service..."></ui5-input>
-</ui5-shellbar>
+				<ion-card-content>
+					<ion-row>
+						<ion-col>
+							<div>
+								<img src="src\assets\images\BR218.jpg" />
+							</div>
+						</ion-col>
+					</ion-row>
 
-<ui5-combobox placeholder="Contains" filter="Contains">
-	<ui5-cb-item text="Austria"></ui5-cb-item>
-	<ui5-cb-item text="Bulgaria"></ui5-cb-item>
-	<ui5-cb-item text="Germany"></ui5-cb-item>
-	<ui5-cb-item text="United Kingdom"></ui5-cb-item>
-	<ui5-cb-item text="Kazakhstan"></ui5-cb-item>
-</ui5-combobox>
-<ui5-table class="demo-table" id="table" mode="MultiSelect" items="{/user_detailsSet}" >
-	<!-- Columns -->
-	<ui5-table-column slot="columns" style="width: 12rem">
-		<span style="line-height: 1.4rem">Product</span>
-	</ui5-table-column>
+					<ion-row>
+						<ion-col>
+							<div>
+								<ion-list>
+									<ion-item>
+										<ion-range min="0" max="100" step="10" snaps="true" ticks="true"
+											color="secondary">
+											<ion-icon size="small" slot="start" name="sunny"></ion-icon>
+											<ion-icon slot="end" name="sunny"></ion-icon>
+										</ion-range>
+									</ion-item>
+								</ion-list>
+							</div>
+						</ion-col>
+					</ion-row>
 
-	<ui5-table-column slot="columns" min-width="800" popin-text="Supplier">
-		<span style="line-height: 1.4rem">Supplier</span>
-	</ui5-table-column>
+					<ion-row>
+						<ion-col>
+							<div>
+								<ion-segment value="paid">
+									<ion-segment-button value="paid">
+										<ion-label>Back</ion-label>
+									</ion-segment-button>
+									<ion-segment-button value="free">
+										<ion-label>Stop</ion-label>
+									</ion-segment-button>
+									<ion-segment-button value="top">
+										<ion-label>Forward</ion-label>
+									</ion-segment-button>
+								</ion-segment>
+							</div>
+						</ion-col>
+					</ion-row>
+				</ion-card-content>
+			</ion-card>
+		</ion-slide>
 
-	<ui5-table-column slot="columns" min-width="600" popin-text="Dimensions" demand-popin>
-		<span style="line-height: 1.4rem">Dimensions</span>
-	</ui5-table-column>
+		<ion-slide>
+			<ion-card>
+				<ion-card-header>
+					<ion-card-subtitle>Elektro</ion-card-subtitle>
+					<ion-card-title>Portfeeder</ion-card-title>
+				</ion-card-header>
 
-	<ui5-table-column slot="columns" min-width="600" popin-text="Weight" demand-popin>
-		<span style="line-height: 1.4rem">Weight</span>
-	</ui5-table-column>
+				<ion-card-content>
+					<ion-row>
+						<ion-col>
+							<div>
+								<img src="src\assets\images\BR218.jpg" />
+							</div>
+						</ion-col>
+					</ion-row>
 
-	<ui5-table-column slot="columns">
-		<span style="line-height: 1.4rem">Price</span>
-	</ui5-table-column>
+					<ion-row>
+						<ion-col>
+							<div>
+								<ion-list>
+									<ion-item>
+										<ion-range min="0" max="100" step="10" snaps="true" ticks="true"
+											color="secondary">
+											<ion-icon size="small" slot="start" name="sunny"></ion-icon>
+											<ion-icon slot="end" name="sunny"></ion-icon>
+										</ion-range>
+									</ion-item>
+								</ion-list>
+							</div>
+						</ion-col>
+					</ion-row>
 
-	<ui5-table-row>
-		<ui5-table-cell>Notebook Basic 15HT-1000</ui5-table-cell>
-		<ui5-table-cell>Very Best Screens</ui5-table-cell>
-		<ui5-table-cell>30 x 18 x 3cm</ui5-table-cell>
-		<ui5-table-cell>4.2KG</ui5-table-cell>
-		<ui5-table-cell>956EUR</ui5-table-cell>
-	</ui5-table-row>
-
-	<ui5-table-row>
-		<ui5-table-cell>Notebook Basic 17HT-1001</ui5-table-cell>
-		<ui5-table-cell>Very Best Screens</ui5-table-cell>
-		<ui5-table-cell>29 x 17 x 3.1cm</ui5-table-cell>
-		<ui5-table-cell>4.5KG</ui5-table-cell>
-		<ui5-table-cell>1249EUR</ui5-table-cell>
-	</ui5-table-row>
-
-	<ui5-table-row>
-		<ui5-table-cell>Notebook Basic 18HT-1002</ui5-table-cell>
-		<ui5-table-cell>Very Best Screens</ui5-table-cell>
-		<ui5-table-cell>28 x 19 x 2.5cm</ui5-table-cell>
-		<ui5-table-cell>4.2KG</ui5-table-cell>
-		<ui5-table-cell>1570EUR</ui5-table-cell>
-	</ui5-table-row>
-</ui5-table>
-
-<ui5-segmented-button>
-  <ui5-segmented-button-item>SalesOrders</ui5-segmented-button-item>
-  <ui5-segmented-button-item pressed>PurchaseOrders</ui5-segmented-button-item>
-  <ui5-segmented-button-item>All</ui5-segmented-button-item>
-</ui5-segmented-button>
+					<ion-row>
+						<ion-col>
+							<div>
+								<ion-segment value="paid">
+									<ion-segment-button value="paid">
+										<ion-label>Back</ion-label>
+									</ion-segment-button>
+									<ion-segment-button value="free">
+										<ion-label>Stop</ion-label>
+									</ion-segment-button>
+									<ion-segment-button value="top">
+										<ion-label>Forward</ion-label>
+									</ion-segment-button>
+								</ion-segment>
+							</div>
+						</ion-col>
+					</ion-row>
+				</ion-card-content>
+			</ion-card>
+		</ion-slide>
 
 
-<ui5-barcode-scanner-dialog id="dlgScan"></ui5-barcode-scanner-dialog>
+	</ion-slides>
 
-<ui5-button id="btnScan" icon="camera" title="Start Camera">Scan</ui5-button>
-<ui5-label id="scanResult"></ui5-label>
-<ui5-label id="scanError"></ui5-label>
 
-<script>
-	btnScan.addEventListener("click", function(event) {
-		dlgScan.show();
-	});
+	<ion-grid>
 
-	dlgScan.addEventListener("scan-success", function(event) {
-		scanResult.innerHTML = event.detail.text;
-		dlgScan.close();
-	});
+		<ion-row>
+			<ion-col>
+				<div>
+					<canvas id="canvas" width="100%" height="100%"></canvas>
+				</div>
+			</ion-col>
+		</ion-row>
 
-	dlgScan.addEventListener("scan-error", function(event) {
-		scanError.innerHTML = event.detail.message;
-		dlgScan.close();
-	});
-</script>
-  
+	</ion-grid>
 </ion-content>

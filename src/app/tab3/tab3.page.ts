@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-
+import { fabric } from 'fabric';
 
 @Component({
   selector: 'app-tab3',
@@ -7,7 +7,14 @@ import { Component } from '@angular/core';
   styleUrls: ['tab3.page.scss']
 })
 export class Tab3Page {
+  
+  canvas: any;
 
   constructor() {}
+
+   ngOnInit() {
+     this.canvas = new fabric.Canvas('canvas');
+     this.canvas.add(new fabric.IText('Hello World !'));
+   }
 
 }

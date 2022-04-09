@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { API } from '../services/photo.service';
 import * as Leaflet from 'leaflet';
 import { Socket } from 'ngx-socket-io';
-//import data  from 'geo.json';
 
 @Component({
   selector: 'app-tab1',

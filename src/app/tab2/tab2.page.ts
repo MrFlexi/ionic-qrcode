@@ -9,6 +9,7 @@ import { API } from '../services/photo.service';
 })
 export class Tab2Page {
   deviceList ='';
+  
 
   constructor(public myAPI: API, private socket: Socket) { }
 
@@ -36,6 +37,17 @@ export class Tab2Page {
   }
   getWebSocketData() {
     this.socket.emit('test', 'hallo');
+  }
+
+  getGPS() {
+    this.myAPI.getLocation();
+    this.myAPI.reverseGeo();
+    // Set marker
+    //const markPoint = Leaflet.marker([this.myAPI.latitude, this.myAPI.longitude]);
+    //markPoint.bindPopup('<p>Hallo</p>');
+    //this.map.addLayer(markPoint);
+    //this.map.setView([this.myAPI.latitude, this.myAPI.longitude], 16);
+    this.myAPI.showToast('GPS aquired')
   }
 
 }

@@ -14,34 +14,44 @@
       <ion-label>WebSocket</ion-label>
       <ion-badge  slot="end">Ping</ion-badge>
       <ion-badge  slot="end">47ms</ion-badge>
-    </ion-item>      
+    </ion-item>  
+    
+    <ion-item class="ion-activated" button (click)="getGPS()">
+      <ion-icon name="locate-outline" slot="start"></ion-icon>
+      <ion-label>Geo location</ion-label>
+      
+      <ion-badge *ngIf="myAPI.geoLocation.address.road"  slot="end">{{myAPI.geoLocation.address.road}}</ion-badge>
+      <ion-badge  *ngIf="myAPI.geoLocation.address.town" slot="end">{{myAPI.geoLocation.address.town}}</ion-badge>
+      <ion-badge  slot="end">{{myAPI.longitude}}</ion-badge>
+      <ion-badge  slot="end">{{myAPI.latitude}}</ion-badge>
+    </ion-item>
   </ion-card>
 
 
   <ion-grid>
     <ion-row>
+      
       <ion-col>
         <div>
-          1 of 3         
+          
         </div>
       </ion-col>
+
       <ion-col>
         <div>
           <ion-img src="{{myAPI.lastDetectedImage}}" width="10%" height="10%" ></ion-img> 
         </div>
       </ion-col>
+
       <ion-col>
         <div>
           <ion-list>
-            <ion-item *ngFor="let item of this.deviceList">
+            <ion-item *ngFor="let item of this.myAPI.detectedObjects">
               <ion-label>
-                <h2>{{item.device_id}}</h2>            
+                <h2>{{item.className}}</h2>            
               </ion-label>       
               <ion-label>            
-                <h2>{{item.name}}</h2>            
-              </ion-label>       
-              <ion-label>            
-                <h2>{{item.sleep_time}}</h2>            
+                <h2>{{item.classCount}}</h2>            
               </ion-label>       
             </ion-item>
           </ion-list>
@@ -62,6 +72,9 @@
         <ion-icon name="cloud-download"></ion-icon>
       </ion-fab-button>
       <ion-fab-button (click)="detectCars()">
+        <ion-icon name="camera-outline"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button (click)="myAPI.reverseGeo()">
         <ion-icon name="camera-outline"></ion-icon>
       </ion-fab-button>
     </ion-fab-list>
