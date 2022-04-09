@@ -26,6 +26,7 @@ export class API {
   cars: any;
   detection: any;
   nomatim: any;
+  response: any;
   lastDetectedImage: any = "http://yolo.szaroletta.de/detected_images/last.jpg";
   geoLocation : any;
   detectedObjects = [{className:"car", classCount:26},
@@ -140,6 +141,33 @@ export class API {
                   console.log('reverseGeo: ', data);
                   this.geoLocation = data['geoLocation'];
                   console.log('reverseGeo: ', this.nomatim);
+                }
+      );
+  }
+
+  public lokChanged() {
+    // Destination URL
+    console.log('LokChanged');
+    const url = 'localhost:3033/LokChanged';
+
+    const httpOptions = {
+      headers: new HttpHeaders({
+          'Content-Type': 'application/json',
+      })};
+
+
+    const payload = new FormData();
+    const dataOut = {
+                      latitude: this.longitude,
+                      longitude: this.longitude
+                    };
+
+    payload.append('data',JSON.stringify(dataOut));
+
+    this.response = this.httpClient.post(url,payload,httpOptions);
+    this.response.subscribe(data => {
+                  this.response = data;
+                  console.log('API Call: ', data);
                 }
       );
   }

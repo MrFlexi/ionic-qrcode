@@ -36,7 +36,7 @@
 						<ion-col>
 							<div>
 								<ion-segment value="paid">
-									<ion-segment-button value="paid">
+									<ion-segment-button value="paid" (click)="myAPI.lokChanged()">
 										<ion-label>Back</ion-label>
 									</ion-segment-button>
 									<ion-segment-button value="free">
@@ -75,8 +75,7 @@
 							<div>
 								<ion-list>
 									<ion-item>
-										<ion-range min="0" max="100" step="10" snaps="true" ticks="true"
-											color="secondary">
+										<ion-range min="0" max="100" step="10" snaps="true" ticks="true" (ionChange)="onSliderChanged($event)" color="secondary">
 											<ion-icon size="small" slot="start" name="sunny"></ion-icon>
 											<ion-icon slot="end" name="sunny"></ion-icon>
 										</ion-range>

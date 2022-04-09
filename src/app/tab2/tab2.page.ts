@@ -11,7 +11,7 @@ export class Tab2Page {
   deviceList ='';
   
 
-  constructor(public myAPI: API, private socket: Socket) { }
+  constructor( public myAPI: API, private socket: Socket) { }
 
   ngOnInit() {
     this.socket.connect();
