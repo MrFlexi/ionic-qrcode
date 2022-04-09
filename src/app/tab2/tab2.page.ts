@@ -16,7 +16,7 @@ export class Tab2Page {
   ngOnInit() {
     this.socket.connect();
  
-    this.socket.fromEvent('Devices').subscribe(data => {
+    this.socket.fromEvent('loklist_data').subscribe(data => {
       this.deviceList = JSON.parse(data['DeviceList']);
         this.myAPI.showToast('WebSocket received');
     });
@@ -36,7 +36,7 @@ export class Tab2Page {
     this.myAPI.detectCars();
   }
   getWebSocketData() {
-    this.socket.emit('test', name);
+    this.socket.emit('test', 'hallo');
   }
 
   getGPS() {
