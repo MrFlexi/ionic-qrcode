@@ -8,8 +8,6 @@
 
 <ion-content>    
   
-
-  
   <ion-content [fullscreen]="true">
   <ion-card>
     <ion-item class="ion-activated"  >
@@ -18,17 +16,38 @@
       <ion-badge  slot="end">{{myAPI.barcode.format}}</ion-badge>
       <ion-badge  slot="end">{{myAPI.barcode.text}}</ion-badge>
     </ion-item>
-  
+
+    
     <ion-item class="ion-activated" button (click)="getGPS()">
-      <ion-icon name="locate-outline" slot="start"></ion-icon>
-      <ion-label>Geo location</ion-label>
-      <ion-badge  slot="end">{{myAPI.longitude}}</ion-badge>
-      <ion-badge  slot="end">{{myAPI.latitude}}</ion-badge>
+      <ion-icon name="locate-outline" slot="start"></ion-icon>      
+      <ion-list slot="start">        
+        <ion-item>
+          <ion-label>Longitude</ion-label>
+          <ion-badge  slot="end">{{myAPI.geoLocation.coords.longitude}}</ion-badge>
+        </ion-item>
+        <ion-item>
+          <ion-label>Latitude</ion-label>
+          <ion-badge  slot="end">{{myAPI.geoLocation.coords.latitude}}</ion-badge>
+        </ion-item>
+      </ion-list> 
+
+      <ion-list slot="start">         
+        <ion-item>
+          <ion-label>Speed</ion-label>
+          <ion-badge  slot="end">{{myAPI.geoLocation.coords.speed}}</ion-badge>
+        </ion-item>
+        <ion-item>
+          <ion-label>Altitude</ion-label>
+          <ion-badge  slot="end">{{myAPI.geoLocation.coords.altitude}}</ion-badge>
+        </ion-item>
+      </ion-list> 
+
+
     </ion-item>
       
   </ion-card>
 
-      <ion-fab horizontal="center" vertical="center" slot="fixed">
+      <ion-fab horizontal="left" vertical="center" slot="fixed">
         <ion-fab-button color="secondary">
           <ion-icon md="caret-forward" ios="chevron-forward-circle-outline"></ion-icon>
         </ion-fab-button>

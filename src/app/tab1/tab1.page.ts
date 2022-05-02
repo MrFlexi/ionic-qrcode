@@ -22,20 +22,29 @@ export class Tab1Page {
   constructor(public myAPI: API, private socket: Socket) { }
 
   ngOnInit() {
-  }
-
-  ionViewDidEnter() {
     fetch('./assets/geo.json')
       .then(res => res.json())
       .then(data => {
         this.propertyList = data.properties;
-        this.leafletMap();
+        this.leafletInit();
       })
       .catch(err => console.error(err));
   }
 
-  leafletMap() {
-    this.map = new Leaflet.Map('mapId').setView([48.1365, 11.6825], 10);
+  //ionViewDidEnter() {
+  //  fetch('./assets/geo.json')
+  //    .then(res => res.json())
+  //    .then(data => {
+  //      this.propertyList = data.properties;
+  //      this.leafletMap();
+  //    })
+  //    .catch(err => console.error(err));
+  //}
+
+  leafletInit() {
+    const position = new Leaflet.LatLng(48.1365, 11.6825);   
+
+    this.map = new Leaflet.Map('mapId').setView(position, 10);
     Leaflet.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
       attribution: 'edupala.com'
     }).addTo(this.map);
@@ -43,9 +52,7 @@ export class Tab1Page {
     //Leaflet.geoJSON().addData(this.myLines).addTo(this.map);
 
     // Set marker
-    const markPoint = Leaflet.marker([48.094, 11.537]);
-    markPoint.bindPopup('<p>MrFlexi.</p>');
-    this.map.addLayer(markPoint);
+    this.leafletSetCrosshair(position);
   }
 
   ionViewWillLeave() {
@@ -60,13 +67,29 @@ export class Tab1Page {
     this.myAPI.getBarcode();
   }
 
+  leafletSetCrosshair(position)
+  {
+    // Set marker
+    // const markPoint = Leaflet.marker([this.myAPI.geoLocation.coords.latitude, this.myAPI.geoLocation.coords.longitude]);
+
+    const markerCircle = Leaflet.circleMarker(position, {
+      color: 'red',
+      fillColor: '#f03',
+      fillOpacity: 0.1,
+      radius: 500
+  });
+    markerCircle.setRadius(40);
+
+    //markPoint.bindPopup('<p>Hallo</p>');
+    this.map.addLayer(markerCircle);
+    this.map.setView([this.myAPI.geoLocation.coords.latitude, this.myAPI.geoLocation.coords.longitude], 16);
+
+  }
+  
   getGPS() {
     this.myAPI.getLocation();
-    // Set marker
-    const markPoint = Leaflet.marker([this.myAPI.latitude, this.myAPI.longitude]);
-    markPoint.bindPopup('<p>Hallo</p>');
-    this.map.addLayer(markPoint);
-    this.map.setView([this.myAPI.latitude, this.myAPI.longitude], 16);
-    this.myAPI.showToast('GPS aquired')
+    const position = new Leaflet.LatLng( this.myAPI.geoLocation.coords.latitude, this.myAPI.geoLocation.coords.longitude);
+    this.leafletSetCrosshair(position);
+    this.myAPI.showToast('GPS aquired');
   }
 }

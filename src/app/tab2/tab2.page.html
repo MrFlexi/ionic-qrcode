@@ -20,8 +20,7 @@
       <ion-icon name="locate-outline" slot="start"></ion-icon>
       <ion-label>Geo location</ion-label>
       
-      <ion-badge *ngIf="myAPI.geoLocation.address.road"  slot="end">{{myAPI.geoLocation.address.road}}</ion-badge>
-      <ion-badge  *ngIf="myAPI.geoLocation.address.town" slot="end">{{myAPI.geoLocation.address.town}}</ion-badge>
+      
       <ion-badge  slot="end">{{myAPI.longitude}}</ion-badge>
       <ion-badge  slot="end">{{myAPI.latitude}}</ion-badge>
     </ion-item>
@@ -34,6 +33,12 @@
       <ion-col>
         <div>
           
+        </div>
+      </ion-col>
+
+      <ion-col>
+        <div>
+          <ion-img src="{{myAPI.lastPlantImage}}" width="10%" height="10%" ></ion-img> 
         </div>
       </ion-col>
 

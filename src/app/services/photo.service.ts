@@ -18,9 +18,7 @@ import {HttpHeaders} from '@angular/common/http';
   providedIn: 'root'
 })
 
-export class API {
-  latitude: any = 22; //latitude
-  longitude: any = 33; //longitude
+export class API {  
   barcode: any = 'Hallo Welt';
   nvcValue: any = 10101010;
   cars: any;
@@ -28,6 +26,7 @@ export class API {
   nomatim: any;
   response: any;
   lastDetectedImage: any = "http://yolo.szaroletta.de/detected_images/last.jpg";
+  lastPlantImage: any = "http://api.szaroletta.de/get_last_image";
   geoLocation : any;
   detectedObjects = [{className:"car", classCount:26},
                       {className:"person", classCount:2}];
@@ -98,8 +97,8 @@ export class API {
     const dataOut = {
                       deviceId: 'MrFlexi',
                       type: 'Street',
-                      latitude: this.latitude,
-                      longitude: this.longitude
+                      latitude: this.geoLocation.coords.latitude,
+                      longitude: this.geoLocation.coords.longitude
                     };
 
     payload.append('data',JSON.stringify(dataOut));
@@ -129,8 +128,8 @@ export class API {
 
     const payload = new FormData();
     const dataOut = {
-                      latitude: this.longitude,
-                      longitude: this.longitude
+                      latitude: this.geoLocation.coords.latitude,
+                      longitude: this.geoLocation.coords.longitude
                     };
 
     payload.append('data',JSON.stringify(dataOut));
@@ -158,8 +157,8 @@ export class API {
 
     const payload = new FormData();
     const dataOut = {
-                      latitude: this.longitude,
-                      longitude: this.longitude
+                      latitude: this.geoLocation.coords.longitude,
+                      longitude: this.geoLocation.coords.longitude
                     };
 
     payload.append('data',JSON.stringify(dataOut));
@@ -174,9 +173,8 @@ export class API {
 
 
   public async getLocation() {
-    const position = await Geolocation.getCurrentPosition();
-    this.latitude = position.coords.latitude;
-    this.longitude = position.coords.longitude;
+    this.geoLocation = await Geolocation.getCurrentPosition();
+
   }
 
 
