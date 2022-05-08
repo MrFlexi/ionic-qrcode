@@ -28,16 +28,18 @@ export class API {
   response: any;
   lastDetectedImage: any = "http://yolo.szaroletta.de/detected_images/last.jpg";
   lastPlantImage: any = "http://api.szaroletta.de/get_last_image";
-  geoLocation : any;
+  geoLocation: any;
+  batteryLevel: any = 0;
   detectedObjects = [{className:"car", classCount:26},
                       {className:"person", classCount:2}];
 
   esp32Service = numberToUUID(0x180F); // '91bad492-b950-4226-aa2b-4ede9fa42f59';
   bmeCharacteristic = numberToUUID(0x2A19);
 
-  bleDevice = BleClient;
+  bleDevice: any;
   BATTERY_SERVICE = numberToUUID(0x180f);
   BATTERY_CHARACTERISTIC = numberToUUID(0x2a19);
+  
 
   public photos: Photo[] = [];
   private ph:Photo;
@@ -229,16 +231,16 @@ async scanBLE(): Promise<void> {
     try {
       await BleClient.initialize();
   
-      const device = await BleClient.requestDevice({
+      this.bleDevice = await BleClient.requestDevice({
         services: [this.BATTERY_SERVICE],
         optionalServices: [],
       });
   
       // connect to device, the onDisconnect callback is optional
-      await BleClient.connect(device.deviceId, (deviceId) => this.onDisconnect(deviceId));
-      console.log('connected to ', device);
+      await BleClient.connect(this.bleDevice.deviceId, (deviceId) => this.onDisconnect(deviceId));
+      console.log('connected to ', this.bleDevice);
   
-      const result = await BleClient.read(device.deviceId, this.BATTERY_SERVICE, this.BATTERY_CHARACTERISTIC);
+      const result = await BleClient.read(this.bleDevice.deviceId, this.BATTERY_SERVICE, this.BATTERY_CHARACTERISTIC);
       console.log('Battery level', result);
   
       //const battery = await BleClient.read(device.deviceId, BATTERY_SERVICE, BATTERY_CHARACTERISTIC);
@@ -248,11 +250,12 @@ async scanBLE(): Promise<void> {
       //console.log('written [1, 0] to control point');
   
       await BleClient.startNotifications(
-        device.deviceId,
+        this.bleDevice.deviceId,
         this.BATTERY_SERVICE,
         this.BATTERY_CHARACTERISTIC,
         (value) => {
-          console.log('Battery level', value.getInt16(0));
+          this.batteryLevel = value.getInt8(0);
+          console.log('Battery level', this.batteryLevel);
         }
       );
   

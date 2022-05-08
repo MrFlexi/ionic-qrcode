@@ -42,18 +42,24 @@
         </ion-item>
       </ion-list> 
 
+      <ion-item class="ion-activated" button (click)="getBLE()">
+        <ion-icon name="bluetooth" slot="start"></ion-icon>      
+        <ion-list slot="start">        
+          <ion-item>
+            <ion-label>Device</ion-label>
+            <ion-badge  slot="end">{{myAPI.bleDevice.name}}</ion-badge>
+          </ion-item>  
+          <ion-item>
+            <ion-label>Battery</ion-label>
+            <ion-badge  slot="end">{{myAPI.batteryLevel}}</ion-badge>
+          </ion-item>        
+        </ion-list> 
+      </ion-item>
+
 
     </ion-item>
 
-    <ion-item class="ion-activated" button (click)="getBLE()">
-      <ion-icon name="bluetooth" slot="start"></ion-icon>      
-      <ion-list slot="start">        
-        <ion-item>
-          <ion-label>Temperature</ion-label>
-          <ion-badge  slot="end">{{myAPI.geoLocation.coords.longitude}}</ion-badge>
-        </ion-item>        
-      </ion-list> 
-    </ion-item>
+    
     
       
   </ion-card>
