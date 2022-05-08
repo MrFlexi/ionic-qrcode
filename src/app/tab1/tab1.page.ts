@@ -92,4 +92,9 @@ export class Tab1Page {
     this.leafletSetCrosshair(position);
     this.myAPI.showToast('GPS aquired');
   }
+
+  getBLE() {
+    this.myAPI.getBLE();
+    this.myAPI.showToast('Bluetooth aquired');
+  }
 }

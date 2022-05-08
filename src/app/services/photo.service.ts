@@ -11,6 +11,7 @@ import { AndroidPermissions } from '@ionic-native/android-permissions';
 import { LocationAccuracy } from '@ionic-native/location-accuracy';
 import {HttpClient} from '@angular/common/http';
 import {HttpHeaders} from '@angular/common/http';
+import { BleClient, numbersToDataView, numberToUUID } from '@capacitor-community/bluetooth-le';
 
 
 
@@ -30,6 +31,13 @@ export class API {
   geoLocation : any;
   detectedObjects = [{className:"car", classCount:26},
                       {className:"person", classCount:2}];
+
+  esp32Service = numberToUUID(0x180F); // '91bad492-b950-4226-aa2b-4ede9fa42f59';
+  bmeCharacteristic = numberToUUID(0x2A19);
+
+  bleDevice = BleClient;
+  BATTERY_SERVICE = numberToUUID(0x180f);
+  BATTERY_CHARACTERISTIC = numberToUUID(0x2a19);
 
   public photos: Photo[] = [];
   private ph:Photo;
@@ -177,7 +185,6 @@ export class API {
 
   }
 
-
   async showToast(msg) {
     const toast = await this.toastCtrl.create({
       message: msg,
@@ -185,6 +192,80 @@ export class API {
       duration: 2000
     });
     toast.present();
+  }
+
+  onDisconnect(deviceId: string): void {
+    console.log(`device ${deviceId} disconnected`);
+  }
+
+
+// https://github.com/capacitor-community/bluetooth-le
+
+
+async scanBLE(): Promise<void> {
+  try {
+    await BleClient.initialize();
+
+    await BleClient.requestLEScan(
+      {
+        services: []
+      },
+      (result) => {
+        console.log('received new scan result', result);
+        console.log('Available services', result.uuids);
+      }
+    );
+
+    setTimeout(async () => {
+      await BleClient.stopLEScan();
+      console.log('stopped scanning');
+    }, 10000);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+  async getBLE(): Promise<void> {
+    try {
+      await BleClient.initialize();
+  
+      const device = await BleClient.requestDevice({
+        services: [this.BATTERY_SERVICE],
+        optionalServices: [],
+      });
+  
+      // connect to device, the onDisconnect callback is optional
+      await BleClient.connect(device.deviceId, (deviceId) => this.onDisconnect(deviceId));
+      console.log('connected to ', device);
+  
+      const result = await BleClient.read(device.deviceId, this.BATTERY_SERVICE, this.BATTERY_CHARACTERISTIC);
+      console.log('Battery level', result);
+  
+      //const battery = await BleClient.read(device.deviceId, BATTERY_SERVICE, BATTERY_CHARACTERISTIC);
+      //console.log('battery level', battery.getUint8(0));
+  
+      //await BleClient.write(device.deviceId, POLAR_PMD_SERVICE, POLAR_PMD_CONTROL_POINT, numbersToDataView([1, 0]));
+      //console.log('written [1, 0] to control point');
+  
+      await BleClient.startNotifications(
+        device.deviceId,
+        this.BATTERY_SERVICE,
+        this.BATTERY_CHARACTERISTIC,
+        (value) => {
+          console.log('Battery level', value.getInt16(0));
+        }
+      );
+  
+      // disconnect after 20 sec
+      //setTimeout(async () => {
+      //  await BleClient.stopNotifications(device.deviceId, this.BATTERY_SERVICE, this.BATTERY_CHARACTERISTIC);
+      //  await BleClient.disconnect(device.deviceId);
+      //  console.log('disconnected from device', device);
+      //}, 200000);
+    } catch (error) {
+      console.log('ERROR');
+      console.error(error);
+    }
   }
 
 }
