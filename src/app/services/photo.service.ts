@@ -2,16 +2,16 @@ import { NgModule } from '@angular/core';
 import { Injectable } from '@angular/core';
 import { Camera, CameraResultType, CameraSource, Photo } from '@capacitor/camera';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
-import { Geolocation } from '@capacitor/geolocation';
+import { Geolocation, Position } from '@capacitor/geolocation';
 import { ToastController } from '@ionic/angular';
 import { Filesystem, Directory } from '@capacitor/filesystem';
 import { Storage } from '@capacitor/storage';
 import { Platform } from '@ionic/angular';
 import { AndroidPermissions } from '@ionic-native/android-permissions';
 import { LocationAccuracy } from '@ionic-native/location-accuracy';
-import {HttpClient} from '@angular/common/http';
-import {HttpHeaders} from '@angular/common/http';
-import { BleClient, numbersToDataView, numberToUUID } from '@capacitor-community/bluetooth-le';
+import { HttpClient } from '@angular/common/http';
+import { HttpHeaders } from '@angular/common/http';
+import { BleClient, BleClientInterface, numbersToDataView, numberToUUID } from '@capacitor-community/bluetooth-le';
 
 
 
@@ -19,7 +19,7 @@ import { BleClient, numbersToDataView, numberToUUID } from '@capacitor-community
   providedIn: 'root'
 })
 
-export class API {  
+export class API {
   barcode: any = 'Hallo Welt';
   nvcValue: any = 10101010;
   cars: any;
@@ -28,24 +28,25 @@ export class API {
   response: any;
   lastDetectedImage: any = "http://yolo.szaroletta.de/detected_images/last.jpg";
   lastPlantImage: any = "http://api.szaroletta.de/get_last_image";
-  geoLocation: any;
+  geoLocation: Position;
   batteryLevel: any = 0;
-  detectedObjects = [{className:"car", classCount:26},
-                      {className:"person", classCount:2}];
+  batteryChargeCurrent: any = 0;
+  detectedObjects = [{ className: 'car', classCount: 26 },
+  { className: 'person', classCount: 2 }];
 
   esp32Service = numberToUUID(0x180F); // '91bad492-b950-4226-aa2b-4ede9fa42f59';
   bmeCharacteristic = numberToUUID(0x2A19);
 
-  bleDevice: any;
+  public bleDevice: any;
+
   BATTERY_SERVICE = numberToUUID(0x180f);
   BATTERY_CHARACTERISTIC = numberToUUID(0x2a19);
-  
+  BatteryChargeCharacteristic = 'c530390d-cb2a-46c3-87c4-2f302a2f371e';
 
   public photos: Photo[] = [];
-  private ph:Photo;
 
   constructor(private toastCtrl: ToastController,
-              public httpClient: HttpClient) {
+    public httpClient: HttpClient) {
     this.getLocation();
   }
 
@@ -60,7 +61,7 @@ export class API {
     });
   }
 
- 
+
   public async addNewToGallery() {
     // Take a photo
     const image = await Camera.getPhoto({
@@ -68,14 +69,13 @@ export class API {
       source: CameraSource.Camera,
       quality: 100
     });
-   
     console.log('Image webPath', image.webPath);
     console.log('Image Path', image.path);
     console.log('Data URL', image.dataUrl);
 
     const response = await fetch(image.webPath);
     const imgBlob = await response.blob();
-    console.log('data:', imgBlob); 
+    console.log('data:', imgBlob);
   }
 
   public async detectCars() {
@@ -85,7 +85,6 @@ export class API {
       source: CameraSource.Camera,
       quality: 100
     });
-   
     console.log('Image webPath', image.webPath);
     console.log('Image Path', image.path);
     console.log('Data URL', image.dataUrl);
@@ -93,37 +92,35 @@ export class API {
     const response = await fetch(image.webPath);
     const imgBlob = await response.blob();
     console.log('data:', imgBlob);
- 
     this.getLocation();
     this.yoloImageDetection(imgBlob);
   }
 
-  
   public yoloImageDetection(imageBlob) {
     // Destination URL
     const url = 'http://api.szaroletta.de/upload_and_detect';
 
     const payload = new FormData();
     const dataOut = {
-                      deviceId: 'MrFlexi',
-                      type: 'Street',
-                      latitude: this.geoLocation.coords.latitude,
-                      longitude: this.geoLocation.coords.longitude
-                    };
+      deviceId: 'MrFlexi',
+      type: 'Street',
+      latitude: this.geoLocation.coords.latitude,
+      longitude: this.geoLocation.coords.longitude
+    };
 
-    payload.append('data',JSON.stringify(dataOut));
+    payload.append('data', JSON.stringify(dataOut));
     payload.append('image', imageBlob, 'image.jpg');
 
-    this.detection = this.httpClient.post(url,payload);
+    this.detection = this.httpClient.post(url, payload);
     this.detection.subscribe(data => {
-                  this.detection = data;
-                  console.log('my detections: ', data);
-                  this.lastDetectedImage = 'http://'+data['url'];
-                  this.detectedObjects = data['detectedObjects'];
-                  this.geoLocation = data['geoLocation'];
-                  console.log('new url: ', this.lastDetectedImage);
-                }
-      );
+      this.detection = data;
+      console.log('my detections: ', data);
+      this.lastDetectedImage = 'http://' + data['url'];
+      this.detectedObjects = data['detectedObjects'];
+      this.geoLocation = data['geoLocation'];
+      console.log('new url: ', this.lastDetectedImage);
+    }
+    );
   }
 
   public reverseGeo() {
@@ -132,26 +129,27 @@ export class API {
 
     const httpOptions = {
       headers: new HttpHeaders({
-          'Content-Type': 'application/json',
-      })};
+        'Content-Type': 'application/json',
+      })
+    };
 
 
     const payload = new FormData();
     const dataOut = {
-                      latitude: this.geoLocation.coords.latitude,
-                      longitude: this.geoLocation.coords.longitude
-                    };
+      latitude: this.geoLocation.coords.latitude,
+      longitude: this.geoLocation.coords.longitude
+    };
 
-    payload.append('data',JSON.stringify(dataOut));
+    payload.append('data', JSON.stringify(dataOut));
 
-    this.nomatim = this.httpClient.post(url,payload,httpOptions);
+    this.nomatim = this.httpClient.post(url, payload, httpOptions);
     this.nomatim.subscribe(data => {
-                  this.nomatim = data;
-                  console.log('reverseGeo: ', data);
-                  this.geoLocation = data['geoLocation'];
-                  console.log('reverseGeo: ', this.nomatim);
-                }
-      );
+      this.nomatim = data;
+      console.log('reverseGeo: ', data);
+      this.geoLocation = data['geoLocation'];
+      console.log('reverseGeo: ', this.nomatim);
+    }
+    );
   }
 
   public lokChanged() {
@@ -161,24 +159,25 @@ export class API {
 
     const httpOptions = {
       headers: new HttpHeaders({
-          'Content-Type': 'application/json',
-      })};
+        'Content-Type': 'application/json',
+      })
+    };
 
 
     const payload = new FormData();
     const dataOut = {
-                      latitude: this.geoLocation.coords.longitude,
-                      longitude: this.geoLocation.coords.longitude
-                    };
+      latitude: this.geoLocation.coords.longitude,
+      longitude: this.geoLocation.coords.longitude
+    };
 
-    payload.append('data',JSON.stringify(dataOut));
+    payload.append('data', JSON.stringify(dataOut));
 
-    this.response = this.httpClient.post(url,payload,httpOptions);
+    this.response = this.httpClient.post(url, payload, httpOptions);
     this.response.subscribe(data => {
-                  this.response = data;
-                  console.log('API Call: ', data);
-                }
-      );
+      this.response = data;
+      console.log('API Call: ', data);
+    }
+    );
   }
 
 
@@ -201,54 +200,48 @@ export class API {
   }
 
 
-// https://github.com/capacitor-community/bluetooth-le
+  // https://github.com/capacitor-community/bluetooth-le
 
 
-async scanBLE(): Promise<void> {
-  try {
-    await BleClient.initialize();
-
-    await BleClient.requestLEScan(
-      {
-        services: []
-      },
-      (result) => {
-        console.log('received new scan result', result);
-        console.log('Available services', result.uuids);
-      }
-    );
-
-    setTimeout(async () => {
-      await BleClient.stopLEScan();
-      console.log('stopped scanning');
-    }, 10000);
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-  async getBLE(): Promise<void> {
+  async scanBLE(): Promise<void> {
     try {
       await BleClient.initialize();
-  
+
+      await BleClient.requestLEScan(
+        {
+          services: []
+        },
+        (result) => {
+          console.log('received new scan result', result);
+          console.log('Available services', result.uuids);
+        }
+      );
+
+      setTimeout(async () => {
+        await BleClient.stopLEScan();
+        console.log('stopped scanning');
+      }, 10000);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async initBLE(): Promise<void> {
+    try {
+      await BleClient.initialize();
+
       this.bleDevice = await BleClient.requestDevice({
         services: [this.BATTERY_SERVICE],
         optionalServices: [],
       });
-  
+
       // connect to device, the onDisconnect callback is optional
       await BleClient.connect(this.bleDevice.deviceId, (deviceId) => this.onDisconnect(deviceId));
       console.log('connected to ', this.bleDevice);
-  
+
       const result = await BleClient.read(this.bleDevice.deviceId, this.BATTERY_SERVICE, this.BATTERY_CHARACTERISTIC);
       console.log('Battery level', result);
-  
-      //const battery = await BleClient.read(device.deviceId, BATTERY_SERVICE, BATTERY_CHARACTERISTIC);
-      //console.log('battery level', battery.getUint8(0));
-  
-      //await BleClient.write(device.deviceId, POLAR_PMD_SERVICE, POLAR_PMD_CONTROL_POINT, numbersToDataView([1, 0]));
-      //console.log('written [1, 0] to control point');
-  
+
       await BleClient.startNotifications(
         this.bleDevice.deviceId,
         this.BATTERY_SERVICE,
@@ -258,18 +251,20 @@ async scanBLE(): Promise<void> {
           console.log('Battery level', this.batteryLevel);
         }
       );
-  
-      // disconnect after 20 sec
-      //setTimeout(async () => {
-      //  await BleClient.stopNotifications(device.deviceId, this.BATTERY_SERVICE, this.BATTERY_CHARACTERISTIC);
-      //  await BleClient.disconnect(device.deviceId);
-      //  console.log('disconnected from device', device);
-      //}, 200000);
+
+      await BleClient.startNotifications(
+        this.bleDevice.deviceId,
+        this.BATTERY_SERVICE,
+        this.BatteryChargeCharacteristic,
+        (value) => {
+          this.batteryChargeCurrent = value.getInt32(0, true);       // true = LSB  false = MSB
+          console.log('Battery charge', this.batteryChargeCurrent);
+        }
+      );
     } catch (error) {
       console.log('ERROR');
       console.error(error);
     }
   }
-
 }
 

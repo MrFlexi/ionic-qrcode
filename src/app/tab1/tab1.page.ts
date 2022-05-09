@@ -15,10 +15,7 @@ export class Tab1Page {
   message = '';
   messages = [];
   currentUser = '';
-
-  myLines = [{ "type": "LineString", "coordinates": [[-100, 40], [-105, 45], [-110, 55]]},
-              {"type": "LineString","coordinates": [[-105, 40], [-110, 45], [-115, 55]]}];
-
+ 
   constructor(public myAPI: API, private socket: Socket) { }
 
   ngOnInit() {
@@ -31,18 +28,8 @@ export class Tab1Page {
       .catch(err => console.error(err));
   }
 
-  //ionViewDidEnter() {
-  //  fetch('./assets/geo.json')
-  //    .then(res => res.json())
-  //    .then(data => {
-  //      this.propertyList = data.properties;
-  //      this.leafletMap();
-  //    })
-  //    .catch(err => console.error(err));
-  //}
-
   leafletInit() {
-    const position = new Leaflet.LatLng(48.1365, 11.6825);   
+    const position = new Leaflet.LatLng(48.1365, 11.6825);
 
     this.map = new Leaflet.Map('mapId').setView(position, 10);
     Leaflet.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
@@ -93,8 +80,8 @@ export class Tab1Page {
     this.myAPI.showToast('GPS aquired');
   }
 
-  getBLE() {
-    this.myAPI.getBLE();
+  initBLE() {
+    this.myAPI.initBLE();    
     this.myAPI.showToast('Bluetooth aquired');
   }
 }
