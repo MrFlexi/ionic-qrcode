@@ -23,11 +23,11 @@
       <ion-list slot="start">        
         <ion-item>
           <ion-label>Longitude</ion-label>
-          <ion-badge  slot="end">{{myAPI.geoLocation?.coords.altitude}}</ion-badge>
+          <ion-badge  slot="end">{{myAPI.geoLocation?.coords.longitude | number:'1.2-2'}}</ion-badge>
         </ion-item>
         <ion-item>
           <ion-label>Latitude</ion-label>
-          <ion-badge  slot="end">{{myAPI.geoLocation?.coords.latitude}}</ion-badge>
+          <ion-badge  slot="end">{{myAPI.geoLocation?.coords.latitude | number:'1.2-2' }}</ion-badge>
         </ion-item>
       </ion-list> 
 
@@ -53,6 +53,8 @@
             <ion-label>Battery</ion-label>
             <ion-badge  slot="end">{{myAPI.batteryLevel}}</ion-badge>
             <ion-badge  slot="end">{{myAPI.batteryChargeCurrent}}</ion-badge>
+            <ion-badge  slot="end">{{myAPI.sunAzimuth | number:'1.2-2' }}</ion-badge>
+            <ion-badge  slot="end">{{myAPI.sunElevation | number:'1.2-2'  }}</ion-badge>
           </ion-item>        
         </ion-list> 
       </ion-item>

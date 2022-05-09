@@ -31,6 +31,8 @@ export class API {
   geoLocation: Position;
   batteryLevel: any = 0;
   batteryChargeCurrent: any = 0;
+  sunAzimuth: any = 0;
+  sunElevation: any = 0;
   detectedObjects = [{ className: 'car', classCount: 26 },
   { className: 'person', classCount: 2 }];
 
@@ -39,9 +41,13 @@ export class API {
 
   public bleDevice: any;
 
-  BATTERY_SERVICE = numberToUUID(0x180f);
-  BATTERY_CHARACTERISTIC = numberToUUID(0x2a19);
-  BatteryChargeCharacteristic = 'c530390d-cb2a-46c3-87c4-2f302a2f371e';
+  batService = numberToUUID(0x180f);
+  envService = numberToUUID(0x181A);
+
+  batLevelCharacteristic = numberToUUID(0x2a19);
+  batChargeCharacteristic     = 'c530390d-cb2a-46c3-87c4-2f302a2f371e';
+  sunAzimuthCharacteristic    = '738be241-bccb-47d0-9149-ef3024d4324c';
+  sunElevationCharacteristic  = 'e20ce7ec-4ed7-40f4-b149-c9a209e21e92';
 
   public photos: Photo[] = [];
 
@@ -231,7 +237,7 @@ export class API {
       await BleClient.initialize();
 
       this.bleDevice = await BleClient.requestDevice({
-        services: [this.BATTERY_SERVICE],
+        services: [this.batService],
         optionalServices: [],
       });
 
@@ -239,13 +245,13 @@ export class API {
       await BleClient.connect(this.bleDevice.deviceId, (deviceId) => this.onDisconnect(deviceId));
       console.log('connected to ', this.bleDevice);
 
-      const result = await BleClient.read(this.bleDevice.deviceId, this.BATTERY_SERVICE, this.BATTERY_CHARACTERISTIC);
+      const result = await BleClient.read(this.bleDevice.deviceId, this.batService, this.batLevelCharacteristic);
       console.log('Battery level', result);
 
       await BleClient.startNotifications(
         this.bleDevice.deviceId,
-        this.BATTERY_SERVICE,
-        this.BATTERY_CHARACTERISTIC,
+        this.batService,
+        this.batLevelCharacteristic,
         (value) => {
           this.batteryLevel = value.getInt8(0);
           console.log('Battery level', this.batteryLevel);
@@ -254,13 +260,37 @@ export class API {
 
       await BleClient.startNotifications(
         this.bleDevice.deviceId,
-        this.BATTERY_SERVICE,
-        this.BatteryChargeCharacteristic,
+        this.batService,
+        this.batChargeCharacteristic,
         (value) => {
           this.batteryChargeCurrent = value.getInt32(0, true);       // true = LSB  false = MSB
           console.log('Battery charge', this.batteryChargeCurrent);
         }
       );
+
+
+      await BleClient.startNotifications(
+        this.bleDevice.deviceId,
+        this.envService,
+        this.sunAzimuthCharacteristic,
+        (value) => {
+          this.sunAzimuth = value.getFloat64(0, true);       // true = LSB  false = MSB
+          console.log('Sun azimuth', this.sunAzimuth);
+        }
+      );
+
+
+      await BleClient.startNotifications(
+        this.bleDevice.deviceId,
+        this.envService,
+        this.sunElevationCharacteristic,
+        (value) => {
+          this.sunElevation = value.getFloat64(0, true);       // true = LSB  false = MSB
+          console.log('Sun Elevation', this.sunElevation);
+        }
+      );
+
+
     } catch (error) {
       console.log('ERROR');
       console.error(error);
