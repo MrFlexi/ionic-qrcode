@@ -21,8 +21,8 @@
       <ion-label>Geo location</ion-label>
       
       
-      <ion-badge  slot="end">{{myAPI.longitude}}</ion-badge>
-      <ion-badge  slot="end">{{myAPI.latitude}}</ion-badge>
+      <ion-badge  slot="end">{{myAPI.geoLocation?.coords.latitude}}</ion-badge>
+      <ion-badge  slot="end">{{myAPI.geoLocation?.coords.longitude}}</ion-badge>
     </ion-item>
   </ion-card>
 

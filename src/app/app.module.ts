@@ -8,7 +8,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
-const config: SocketIoConfig = { url: 'http://127.0.0.1:3033', options: {} };
+const config: SocketIoConfig = { url: 'http://85.209.49.65/:3033', options: {} };
 
 import { HTTP } from '@ionic-native/http/ngx';
 import {HttpClient, HttpHandler, HttpClientModule} from '@angular/common/http';

@@ -1,177 +1,40 @@
-<ion-content class="ion-padding">
-	<ion-slides>
-		<ion-slide>
-			<ion-card>
-				<ion-card-header>
-					<ion-card-subtitle>Diesel</ion-card-subtitle>
-					<ion-card-title>Br 218</ion-card-title>
-				</ion-card-header>
+<ion-header [translucent]="true">
+	<ion-toolbar>
+	  <ion-title>
+		ESP Connect
+	  </ion-title>
+	</ion-toolbar>
+  </ion-header>
+  
+  <ion-content>    
+	
+	<ion-content [fullscreen]="true">
+	<ion-card>  
+	  	<ion-item class="ion-activated" button (click)="initBLE()">
+		  <ion-icon name="bluetooth" slot="start"></ion-icon>      
+		  <ion-list slot="start">        
+			<ion-item>
+			  <ion-label>Device</ion-label>
+			  <ion-badge  slot="end">{{myAPI.bleDevice?.name}}</ion-badge>
+			</ion-item>  
+			<ion-item>
+			  <ion-label>Battery</ion-label>
+			  <ion-badge  slot="end">{{myAPI.payload.measurement?.bat_voltage}}</ion-badge>
+			  <ion-badge  slot="end">{{myAPI.batteryChargeCurrent}}</ion-badge>
+			  <ion-badge  slot="end">{{myAPI.sunAzimuth | number:'1.2-2' }}</ion-badge>			  
+			</ion-item>        
+		  </ion-list> 
+		</ion-item>  	  
+	</ion-card>
 
-				<ion-card-content>
-					<ion-row>
-						<ion-col>
-							<div>
-								<img src="src\assets\images\BR218.jpg" />
-							</div>
-						</ion-col>
-					</ion-row>
-
-					<ion-row>
-						<ion-col>
-							<div>
-								<ion-list>
-									<ion-item>
-										<ion-range min="0" max="100" step="10" snaps="true" ticks="true"
-											color="secondary">
-											<ion-icon size="small" slot="start" name="sunny"></ion-icon>
-											<ion-icon slot="end" name="sunny"></ion-icon>
-										</ion-range>
-									</ion-item>
-								</ion-list>
-							</div>
-						</ion-col>
-					</ion-row>
-
-					<ion-row>
-						<ion-col>
-							<div>
-								<ion-segment value="paid">
-									<ion-segment-button value="paid" (click)="myAPI.lokChanged()">
-										<ion-label>Back</ion-label>
-									</ion-segment-button>
-									<ion-segment-button value="free">
-										<ion-label>Stop</ion-label>
-									</ion-segment-button>
-									<ion-segment-button value="top">
-										<ion-label>Forward</ion-label>
-									</ion-segment-button>
-								</ion-segment>
-							</div>
-						</ion-col>
-					</ion-row>
-				</ion-card-content>
-			</ion-card>
-		</ion-slide>
-
-
-		<ion-slide>
-			<ion-card>
-				<ion-card-header>
-					<ion-card-subtitle>Elecktro</ion-card-subtitle>
-					<ion-card-title>S-Bahn</ion-card-title>
-				</ion-card-header>
-
-				<ion-card-content>
-					<ion-row>
-						<ion-col>
-							<div>
-								<img src="src\assets\images\BR218.jpg" />
-							</div>
-						</ion-col>
-					</ion-row>
-
-					<ion-row>
-						<ion-col>
-							<div>
-								<ion-list>
-									<ion-item>
-										<ion-range min="0" max="100" step="10" snaps="true" ticks="true" (ionChange)="onSliderChanged($event)" color="secondary">
-											<ion-icon size="small" slot="start" name="sunny"></ion-icon>
-											<ion-icon slot="end" name="sunny"></ion-icon>
-										</ion-range>
-									</ion-item>
-								</ion-list>
-							</div>
-						</ion-col>
-					</ion-row>
-
-					<ion-row>
-						<ion-col>
-							<div>
-								<ion-segment value="paid">
-									<ion-segment-button value="paid">
-										<ion-label>Back</ion-label>
-									</ion-segment-button>
-									<ion-segment-button value="free">
-										<ion-label>Stop</ion-label>
-									</ion-segment-button>
-									<ion-segment-button value="top">
-										<ion-label>Forward</ion-label>
-									</ion-segment-button>
-								</ion-segment>
-							</div>
-						</ion-col>
-					</ion-row>
-				</ion-card-content>
-			</ion-card>
-		</ion-slide>
-
-		<ion-slide>
-			<ion-card>
-				<ion-card-header>
-					<ion-card-subtitle>Elektro</ion-card-subtitle>
-					<ion-card-title>Portfeeder</ion-card-title>
-				</ion-card-header>
-
-				<ion-card-content>
-					<ion-row>
-						<ion-col>
-							<div>
-								<img src="src\assets\images\BR218.jpg" />
-							</div>
-						</ion-col>
-					</ion-row>
-
-					<ion-row>
-						<ion-col>
-							<div>
-								<ion-list>
-									<ion-item>
-										<ion-range min="0" max="100" step="10" snaps="true" ticks="true"
-											color="secondary">
-											<ion-icon size="small" slot="start" name="sunny"></ion-icon>
-											<ion-icon slot="end" name="sunny"></ion-icon>
-										</ion-range>
-									</ion-item>
-								</ion-list>
-							</div>
-						</ion-col>
-					</ion-row>
-
-					<ion-row>
-						<ion-col>
-							<div>
-								<ion-segment value="paid">
-									<ion-segment-button value="paid">
-										<ion-label>Back</ion-label>
-									</ion-segment-button>
-									<ion-segment-button value="free">
-										<ion-label>Stop</ion-label>
-									</ion-segment-button>
-									<ion-segment-button value="top">
-										<ion-label>Forward</ion-label>
-									</ion-segment-button>
-								</ion-segment>
-							</div>
-						</ion-col>
-					</ion-row>
-				</ion-card-content>
-			</ion-card>
-		</ion-slide>
-
-
-	</ion-slides>
-
-
-	<ion-grid>
-
-		<ion-row>
-			<ion-col>
-				<div>
-					<canvas id="canvas" width="100%" height="100%"></canvas>
-				</div>
-			</ion-col>
-		</ion-row>
-
-	</ion-grid>
-</ion-content>
+	<ion-card>		
+		<ion-card-header>		  
+		  <ion-card-title>Payload</ion-card-title>
+		</ion-card-header>
+		<ion-card-content>
+			<ngx-json-viewer [json]="myAPI.payload" [expanded]="true" [depth]="3"></ngx-json-viewer>
+		
+		</ion-card-content>
+	  </ion-card>			 	
+  </ion-content>
+  

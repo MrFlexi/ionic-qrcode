@@ -12,12 +12,15 @@ import { LocationAccuracy } from '@ionic-native/location-accuracy';
 import { HttpClient } from '@angular/common/http';
 import { HttpHeaders } from '@angular/common/http';
 import { BleClient, BleClientInterface, numbersToDataView, numberToUUID } from '@capacitor-community/bluetooth-le';
-
+import { BehaviorSubject, Observable } from 'rxjs';
 
 
 @Injectable({
   providedIn: 'root'
 })
+
+
+
 
 export class API {
   barcode: any = 'Hallo Welt';
@@ -26,13 +29,18 @@ export class API {
   detection: any;
   nomatim: any;
   response: any;
+  latitude: any;
+  longitude: any;
+  speed: any;
+  altitude: any;
+  timestamp: any;
   lastDetectedImage: any = "http://yolo.szaroletta.de/detected_images/last.jpg";
   lastPlantImage: any = "http://api.szaroletta.de/get_last_image";
-  geoLocation: Position;
   batteryLevel: any = 0;
   batteryChargeCurrent: any = 0;
   sunAzimuth: any = 0;
   sunElevation: any = 0;
+  payload: any = "no data";
   detectedObjects = [{ className: 'car', classCount: 26 },
   { className: 'person', classCount: 2 }];
 
@@ -40,22 +48,47 @@ export class API {
   bmeCharacteristic = numberToUUID(0x2A19);
 
   public bleDevice: any;
+  public geoTicker: Observable<any>;
 
   batService = numberToUUID(0x180f);
   envService = numberToUUID(0x181A);
 
   batLevelCharacteristic = numberToUUID(0x2a19);
-  batChargeCharacteristic     = 'c530390d-cb2a-46c3-87c4-2f302a2f371e';
-  sunAzimuthCharacteristic    = '738be241-bccb-47d0-9149-ef3024d4324c';
-  sunElevationCharacteristic  = 'e20ce7ec-4ed7-40f4-b149-c9a209e21e92';
+  batChargeCharacteristic = 'c530390d-cb2a-46c3-87c4-2f302a2f371e';
+  sunAzimuthCharacteristic = '738be241-bccb-47d0-9149-ef3024d4324c';
+  sunElevationCharacteristic = 'e20ce7ec-4ed7-40f4-b149-c9a209e21e92';
+  payloadCharacteristic = 'e20ce7ec-4ed7-40f4-b149-c9a209e21e93';
 
   public photos: Photo[] = [];
+
 
   constructor(private toastCtrl: ToastController,
     public httpClient: HttpClient) {
     this.getLocation();
-  }
 
+    this.geoTicker = new Observable((observer) => {
+      let watchId: any;
+      // Simple geolocation API check provides values to publish
+      if ('geolocation' in navigator) {
+        watchId = Geolocation.watchPosition({}, (position, err) => {
+          console.log('Watch', position);
+          this.latitude = position.coords.latitude;
+          this.longitude = position.coords.longitude;
+          this.speed = position.coords.speed;
+          this.altitude = position.coords.altitude;
+          this.timestamp = position.timestamp;
+
+          observer.next(position);    // Bradcast actual position
+        });
+      }
+    });
+
+    this.geoTicker.subscribe({
+      next(position) {
+        console.log('Position Update: ', position);
+      }
+    });
+  }
 
   public async getBarcode() {
     // Take a photo
@@ -98,7 +131,7 @@ export class API {
     const response = await fetch(image.webPath);
     const imgBlob = await response.blob();
     console.log('data:', imgBlob);
-    this.getLocation();
+    //this.getLocation();
     this.yoloImageDetection(imgBlob);
   }
 
@@ -110,8 +143,8 @@ export class API {
     const dataOut = {
       deviceId: 'MrFlexi',
       type: 'Street',
-      latitude: this.geoLocation.coords.latitude,
-      longitude: this.geoLocation.coords.longitude
+      latitude: this.latitude,
+      longitude: this.longitude
     };
 
     payload.append('data', JSON.stringify(dataOut));
@@ -123,7 +156,7 @@ export class API {
       console.log('my detections: ', data);
       this.lastDetectedImage = 'http://' + data['url'];
       this.detectedObjects = data['detectedObjects'];
-      this.geoLocation = data['geoLocation'];
+      //this.geoLocation = data['geoLocation'];
       console.log('new url: ', this.lastDetectedImage);
     }
     );
@@ -142,8 +175,8 @@ export class API {
 
     const payload = new FormData();
     const dataOut = {
-      latitude: this.geoLocation.coords.latitude,
-      longitude: this.geoLocation.coords.longitude
+      latitude: this.latitude,
+      longitude: this.longitude
     };
 
     payload.append('data', JSON.stringify(dataOut));
@@ -152,7 +185,7 @@ export class API {
     this.nomatim.subscribe(data => {
       this.nomatim = data;
       console.log('reverseGeo: ', data);
-      this.geoLocation = data['geoLocation'];
+      //this.geoLocation = data['geoLocation'];
       console.log('reverseGeo: ', this.nomatim);
     }
     );
@@ -172,8 +205,8 @@ export class API {
 
     const payload = new FormData();
     const dataOut = {
-      latitude: this.geoLocation.coords.longitude,
-      longitude: this.geoLocation.coords.longitude
+      latitude: this.longitude,
+      longitude: this.longitude
     };
 
     payload.append('data', JSON.stringify(dataOut));
@@ -188,9 +221,14 @@ export class API {
 
 
   public async getLocation() {
-    this.geoLocation = await Geolocation.getCurrentPosition();
-
+    const position = await Geolocation.getCurrentPosition();
+    this.latitude = position.coords.latitude;
+    this.longitude = position.coords.longitude;
+    this.speed = position.coords.speed;
+    this.altitude = position.coords.altitude;
+    this.timestamp = position.timestamp;
   }
+
 
   async showToast(msg) {
     const toast = await this.toastCtrl.create({
@@ -234,10 +272,11 @@ export class API {
 
   async initBLE(): Promise<void> {
     try {
+
       await BleClient.initialize();
 
       this.bleDevice = await BleClient.requestDevice({
-        services: [this.batService],
+        services: [this.batService, this.envService],
         optionalServices: [],
       });
 
@@ -285,11 +324,14 @@ export class API {
         this.envService,
         this.sunElevationCharacteristic,
         (value) => {
-          this.sunElevation = value.getFloat64(0, true);       // true = LSB  false = MSB
-          console.log('Sun Elevation', this.sunElevation);
+          //this.sunElevation = value.getFloat64(0, true);       // true = LSB  false = MSB
+          //this.sunElevation = value.buffer.toString();     // true = LSB  false = MSB
+          //console.log('Sun Elevation', this.sunElevation);
+
+          const enc = new TextDecoder("utf-8");
+          this.payload = JSON.parse(enc.decode(value.buffer));
         }
       );
-
 
     } catch (error) {
       console.log('ERROR');

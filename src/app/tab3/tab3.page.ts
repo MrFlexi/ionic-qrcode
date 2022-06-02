@@ -1,25 +1,22 @@
-import { Component } from '@angular/core';
-import { fabric } from 'fabric';
 import { API } from '../services/photo.service';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 
 @Component({
   selector: 'app-tab3',
   templateUrl: 'tab3.page.html',
   styleUrls: ['tab3.page.scss']
 })
-export class Tab3Page {
-  canvas: any;
+export class Tab3Page  implements OnInit, OnDestroy {
 
-  constructor(public myAPI: API) {}
+  constructor(public myAPI: API) { }
 
-   ngOnInit() {
-     this.canvas = new fabric.Canvas('canvas');
-     this.canvas.add(new fabric.IText('Hello World !'));
-   }
+  ngOnInit() {}
+  ionViewDidEnter() {}
+  ngOnDestroy() {}
+  ionViewWillLeave() {}
 
-   onSliderChanged(event, item){
-    event.stopPropagation();
-    //this.myAPI.LokChanged();
+  initBLE() {
+    this.myAPI.initBLE();
+    this.myAPI.showToast('Bluetooth aquired');
   }
-
 }

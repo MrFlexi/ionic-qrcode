@@ -1,7 +1,7 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      TechParade
+      Navigation
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -23,56 +23,37 @@
       <ion-list slot="start">        
         <ion-item>
           <ion-label>Longitude</ion-label>
-          <ion-badge  slot="end">{{myAPI.geoLocation?.coords.longitude | number:'1.2-2'}}</ion-badge>
+          <ion-badge  slot="end">{{myAPI.longitude | number:'1.2-2'}}</ion-badge>
         </ion-item>
         <ion-item>
           <ion-label>Latitude</ion-label>
-          <ion-badge  slot="end">{{myAPI.geoLocation?.coords.latitude | number:'1.2-2' }}</ion-badge>
+          <ion-badge  slot="end">{{myAPI.latitude | number:'1.2-2' }}</ion-badge>          
+        </ion-item>
+        <ion-item>
+          <ion-label>Timestamp</ion-label>          
+          <ion-badge  slot="end">{{myAPI.timestamp}}</ion-badge>
         </ion-item>
       </ion-list> 
 
       <ion-list slot="start">         
         <ion-item>
           <ion-label>Speed</ion-label>
-          <ion-badge  slot="end">{{myAPI.geoLocation?.coords.speed}}</ion-badge>
+          <ion-badge  slot="end">{{myAPI.speed}}</ion-badge>
         </ion-item>
         <ion-item>
           <ion-label>Altitude</ion-label>
-          <ion-badge  slot="end">{{myAPI.geoLocation?.coords.altitude}}</ion-badge>
+          <ion-badge  slot="end">{{myAPI.altitude}}</ion-badge>
         </ion-item>
       </ion-list> 
-
-      <ion-item class="ion-activated" button (click)="initBLE()">
-        <ion-icon name="bluetooth" slot="start"></ion-icon>      
-        <ion-list slot="start">        
-          <ion-item>
-            <ion-label>Device</ion-label>
-            <ion-badge  slot="end">{{myAPI.bleDevice?.name}}</ion-badge>
-          </ion-item>  
-          <ion-item>
-            <ion-label>Battery</ion-label>
-            <ion-badge  slot="end">{{myAPI.batteryLevel}}</ion-badge>
-            <ion-badge  slot="end">{{myAPI.batteryChargeCurrent}}</ion-badge>
-            <ion-badge  slot="end">{{myAPI.sunAzimuth | number:'1.2-2' }}</ion-badge>
-            <ion-badge  slot="end">{{myAPI.sunElevation | number:'1.2-2'  }}</ion-badge>
-          </ion-item>        
-        </ion-list> 
-      </ion-item>
-
-
-    </ion-item>
-
-    
+    </ion-item>   
     
       
   </ion-card>
-
       <ion-fab horizontal="left" vertical="center" slot="fixed">
         <ion-fab-button color="secondary">
           <ion-icon md="caret-forward" ios="chevron-forward-circle-outline"></ion-icon>
         </ion-fab-button>
-
-
+        
         <ion-fab-list side="end">
           <ion-fab-button (click)="getBarcode()">
             <ion-icon name="barcode-outline"></ion-icon>
