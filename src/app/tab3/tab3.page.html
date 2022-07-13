@@ -9,23 +9,46 @@
   <ion-content>    
 	
 	<ion-content [fullscreen]="true">
+		<form novalidate>
+			<ion-list>
+			  <ion-item>
+				<ion-label position="stacked" color="primary">User</ion-label>
+				<ion-input [(ngModel)]="login.username" name="username" type="text" required>
+				</ion-input>
+			  </ion-item>
+			</ion-list>
+			<ion-row>
+			  <ion-col>
+				<ion-button [(ngModel)]="ble.connected" (click)="initBLE()" type="submit" expand="block">
+					<ion-icon name="bluetooth" slot="start"></ion-icon> 
+				 Connect
+			   </ion-button>
+			  </ion-col>
+			  <ion-col>
+				
+				<ion-button (click)="stopBLE()" expand="block">
+					<ion-icon name="bluetooth" slot="start"></ion-icon> 
+				 Disconnect
+				</ion-button>
+			  </ion-col>
+			   
+			</ion-row>
+		  </form>
 	<ion-card>  
 	  	<ion-item class="ion-activated" button (click)="initBLE()">
-		  <ion-icon name="bluetooth" slot="start"></ion-icon>      
+		  <ion-icon name="bluetooth" slot="start"></ion-icon> 
+		  
 		  <ion-list slot="start">        
 			<ion-item>
 			  <ion-label>Device</ion-label>
 			  <ion-badge  slot="end">{{myAPI.bleDevice?.name}}</ion-badge>
-			</ion-item>  
-			<ion-item>
-			  <ion-label>Battery</ion-label>
-			  <ion-badge  slot="end">{{myAPI.payload.measurement?.bat_voltage}}</ion-badge>
-			  <ion-badge  slot="end">{{myAPI.batteryChargeCurrent}}</ion-badge>
-			  <ion-badge  slot="end">{{myAPI.sunAzimuth | number:'1.2-2' }}</ion-badge>			  
-			</ion-item>        
+			</ion-item>   
 		  </ion-list> 
-		</ion-item>  	  
+		</ion-item>  
+		   	  
 	</ion-card>
+
+
 
 	<ion-card>		
 		<ion-card-header>		  

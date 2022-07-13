@@ -22,4 +22,6 @@ import { NgxJsonViewerModule } from 'ngx-json-viewer';
   declarations: [Tab3Page],
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
 })
-export class Tab3PageModule {}
+export class Tab3PageModule {
+
+}
