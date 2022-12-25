@@ -33,6 +33,7 @@ export class API {
   longitude: any;
   speed: any;
   altitude: any;
+  accuracy: any;
   timestamp: any;
   lastDetectedImage: any = "http://yolo.szaroletta.de/detected_images/last.jpg";
   lastPlantImage: any = "http://api.szaroletta.de/get_last_image";
@@ -40,6 +41,7 @@ export class API {
   batteryChargeCurrent: any = 0;
   sunAzimuth: any = 0;
   sunElevation: any = 0;
+  gpsTrack: boolean;
   payload: any = "no data";
   detectedObjects = [{ className: 'car', classCount: 26 },
   { className: 'person', classCount: 2 }];
@@ -74,8 +76,8 @@ export class API {
           console.log('Watch', position);
           this.latitude = position.coords.latitude;
           this.longitude = position.coords.longitude;
+          this.accuracy = position.coords.accuracy;
           this.speed = position.coords.speed;
-          this.altitude = position.coords.altitude;
           this.timestamp = position.timestamp;
 
           observer.next(position);    // Bradcast actual position

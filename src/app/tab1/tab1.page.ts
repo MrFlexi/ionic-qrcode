@@ -17,6 +17,8 @@ export class Tab1Page implements OnInit, OnDestroy {
   message = '';
   messages = [];
   currentUser = '';
+  private locationLayerGroup = new Leaflet.LayerGroup();
+  private trackLayerGroup = new Leaflet.LayerGroup();
 
   constructor(public myAPI: API, private socket: Socket) {
     // Subscribe on GPS position updates
@@ -27,16 +29,32 @@ export class Tab1Page implements OnInit, OnDestroy {
     });
   }
 
-  ngOnInit() {
-    //this.leafletInit();
-  }
-
+  ngOnInit() { }
   ionViewDidEnter() { this.leafletInit(); }
   ngOnDestroy() { }
 
   updateGpsMapPosition() {
+    const accuracy = this.myAPI.accuracy;
     const position = new Leaflet.LatLng(this.myAPI.latitude, this.myAPI.longitude);
-    this.leafletSetCrosshair(position);
+
+    if (position) {
+      this.locationLayerGroup.clearLayers();
+      this.map.setView(position);
+
+      const markerCircle = Leaflet.circleMarker(position, {
+        color: 'blue',
+        radius: accuracy
+      });
+      this.locationLayerGroup.addLayer(markerCircle);
+
+      const markerCircleRed = Leaflet.circleMarker(position, {
+        color: 'red',
+        radius: 5
+      });
+      this.trackLayerGroup.addLayer(markerCircleRed);
+
+    }
+
   }
 
 
@@ -46,16 +64,12 @@ export class Tab1Page implements OnInit, OnDestroy {
     this.map = new Leaflet.Map('mapId').setView(position, 16);
 
     const tileLayerOnline = Leaflet.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
-    attribution: 'Online Layer'
+      attribution: 'Online Layer'
     }).addTo(this.map);
-
-   
 
     // offline baselayer, will use offline source if available
     const tileLayerOffline = L.tileLayerOffline('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: 'Offline Layer',
-      subdomains: 'abc',
-      minZoom: 13,
+      attribution: 'Offline Layer'
     }).addTo(this.map);
 
     const control = L.savetiles(tileLayerOffline, {
@@ -77,21 +91,25 @@ export class Tab1Page implements OnInit, OnDestroy {
       rmText: '<i class="fa fa-trash" aria-hidden="true"  title="Remove tiles"></i>',
     });
     control.addTo(this.map);
+    this.map.addLayer(this.locationLayerGroup);
 
 
     // layer switcher control
     const layerswitcher = new Leaflet.Control.Layers(
       {
-        'Openstreetmap (offline)': tileLayerOffline,
-        'Carto (online)': tileLayerOnline
+        'Carto (online)': tileLayerOnline,
+        'Openstreetmap (offline)': tileLayerOffline
       },
-      null,
+      {
+        'GPS Position': this.locationLayerGroup,
+        'GPS Track': this.trackLayerGroup,
+
+      },
       { collapsed: false }
     ).addTo(this.map);
 
 
-     // Set marker
-     this.leafletSetCrosshair(position);
+
   }
 
   ionViewWillLeave() {
@@ -106,26 +124,12 @@ export class Tab1Page implements OnInit, OnDestroy {
     this.myAPI.getBarcode();
   }
 
-  // Set marker and center map
-  leafletSetCrosshair(position) {
-    this.map.setView(position, 16);
-
-    const markerCircle = Leaflet.circleMarker(position, {
-      color: 'orange',
-      fillColor: '#f03',
-      fillOpacity: 0.1,
-      radius: 500
-    });
-    markerCircle.setRadius(40);
-    this.map.addLayer(markerCircle);
-  }
 
 
   getGPS() {
     //this.myAPI.getLocation();
     if (this.myAPI.latitude) {
-      const position = new Leaflet.LatLng(this.myAPI.latitude, this.myAPI.longitude);
-      this.leafletSetCrosshair(position);
+      this.updateGpsMapPosition();
       this.myAPI.showToast('GPS Position set');
     }
   }
