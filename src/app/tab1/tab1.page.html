@@ -22,16 +22,14 @@
       <ion-icon name="locate-outline" slot="start"></ion-icon>      
       <ion-list slot="start">        
         <ion-item>
-          <ion-label>Longitude</ion-label>
+          <ion-label>Lat/Long</ion-label>
+          <ion-badge  slot="end">{{myAPI.latitude | number:'1.2-2' }}</ion-badge>
           <ion-badge  slot="end">{{myAPI.longitude | number:'1.2-2'}}</ion-badge>
-        </ion-item>
-        <ion-item>
-          <ion-label>Latitude</ion-label>
-          <ion-badge  slot="end">{{myAPI.latitude | number:'1.2-2' }}</ion-badge>          
         </ion-item>
         <ion-item>
           <ion-label>Timestamp</ion-label>          
           <ion-badge  slot="end">{{myAPI.timestamp}}</ion-badge>
+          <ion-badge  slot="end">{{myAPI.accuracy}}</ion-badge>
         </ion-item>
       </ion-list> 
 

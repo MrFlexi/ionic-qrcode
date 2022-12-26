@@ -83,11 +83,18 @@ export class API {
           observer.next(position);    // Bradcast actual position
         });
       }
-    });
+      else { console.log('geolocation not in navigator: '); }
+    }
+    )
 
-    this.geoTicker.subscribe({
+
+    // Call subscribe() to start listening for updates.
+    const locationsSubscription = this.geoTicker.subscribe({
       next(position) {
-        console.log('Position Update: ', position);
+        console.log('Position Update in API Class:: ', position);
+      },
+      error(msg) {
+        console.log('Error Getting Location: ', msg);
       }
     });
   }

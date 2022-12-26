@@ -4,6 +4,7 @@ import * as Leaflet from 'leaflet';
 import * as L from 'leaflet.offline';
 import { Socket } from 'ngx-socket-io';
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { NgIfContext } from '@angular/common';
 
 @Component({
   selector: 'app-tab1',
@@ -24,8 +25,8 @@ export class Tab1Page implements OnInit, OnDestroy {
     // Subscribe on GPS position updates
     const that = this;
     this.myAPI.geoTicker.subscribe((next) => {
-      console.log(next);
-      that.updateGpsMapPosition();
+      console.log('UI GPS Update', next);
+      this.updateGpsMapPosition(next);
     });
   }
 
@@ -33,11 +34,13 @@ export class Tab1Page implements OnInit, OnDestroy {
   ionViewDidEnter() { this.leafletInit(); }
   ngOnDestroy() { }
 
-  updateGpsMapPosition() {
-    const accuracy = this.myAPI.accuracy;
-    const position = new Leaflet.LatLng(this.myAPI.latitude, this.myAPI.longitude);
 
-    if (position) {
+  updateGpsMapPosition= (gps) => {
+    const accuracy = gps.coords.accuracy;
+    const position = new Leaflet.LatLng(gps.coords.latitude, gps.coords.longitude);
+
+    console.log('Leaflet Position', position);
+    if (position && this.map) {
       this.locationLayerGroup.clearLayers();
       this.map.setView(position);
 
@@ -55,7 +58,7 @@ export class Tab1Page implements OnInit, OnDestroy {
 
     }
 
-  }
+  };
 
 
   leafletInit() {
@@ -129,7 +132,7 @@ export class Tab1Page implements OnInit, OnDestroy {
   getGPS() {
     //this.myAPI.getLocation();
     if (this.myAPI.latitude) {
-      this.updateGpsMapPosition();
+      //this.updateGpsMapPosition();
       this.myAPI.showToast('GPS Position set');
     }
   }
