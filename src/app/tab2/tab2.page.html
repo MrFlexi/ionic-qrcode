@@ -8,25 +8,6 @@
 
 <ion-content [fullscreen]="true">
 
-  <ion-card>
-    <ion-item class="ion-activated"  >
-      <ion-icon name="barcode-outline" slot="start"></ion-icon>
-      <ion-label>WebSocket</ion-label>
-      <ion-badge  slot="end">Ping</ion-badge>
-      <ion-badge  slot="end">47ms</ion-badge>
-    </ion-item>  
-    
-    <ion-item class="ion-activated" button (click)="getGPS()">
-      <ion-icon name="locate-outline" slot="start"></ion-icon>
-      <ion-label>Geo location</ion-label>
-      
-      
-      <ion-badge  slot="end">{{myAPI.geoLocation?.coords.latitude}}</ion-badge>
-      <ion-badge  slot="end">{{myAPI.geoLocation?.coords.longitude}}</ion-badge>
-    </ion-item>
-  </ion-card>
-
-
   <ion-grid>
     <ion-row>
       
@@ -77,9 +58,6 @@
         <ion-icon name="cloud-download"></ion-icon>
       </ion-fab-button>
       <ion-fab-button (click)="detectCars()">
-        <ion-icon name="camera-outline"></ion-icon>
-      </ion-fab-button>
-      <ion-fab-button (click)="myAPI.reverseGeo()">
         <ion-icon name="camera-outline"></ion-icon>
       </ion-fab-button>
     </ion-fab-list>

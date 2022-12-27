@@ -2,7 +2,6 @@
 import { API } from '../services/photo.service';
 import * as Leaflet from 'leaflet';
 import * as L from 'leaflet.offline';
-import { Socket } from 'ngx-socket-io';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NgIfContext } from '@angular/common';
 
@@ -21,7 +20,7 @@ export class Tab1Page implements OnInit, OnDestroy {
   private locationLayerGroup = new Leaflet.LayerGroup();
   private trackLayerGroup = new Leaflet.LayerGroup();
 
-  constructor(public myAPI: API, private socket: Socket) {
+  constructor(public myAPI: API) {
     // Subscribe on GPS position updates
     const that = this;
     this.myAPI.geoTicker.subscribe((next) => {
@@ -130,7 +129,7 @@ export class Tab1Page implements OnInit, OnDestroy {
 
 
   getGPS() {
-    //this.myAPI.getLocation();
+    this.myAPI.getLocation();
     if (this.myAPI.latitude) {
       //this.updateGpsMapPosition();
       this.myAPI.showToast('GPS Position set');

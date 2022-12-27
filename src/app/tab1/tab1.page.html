@@ -6,70 +6,58 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>    
-  
-  <ion-content [fullscreen]="true">
-  <ion-card>
-    <ion-item class="ion-activated"  >
-      <ion-icon name="barcode-outline" slot="start"></ion-icon>
-      <ion-label>Barcode</ion-label>
-      <ion-badge  slot="end">{{myAPI.barcode.format}}</ion-badge>
-      <ion-badge  slot="end">{{myAPI.barcode.text}}</ion-badge>
-    </ion-item>
+<ion-content [fullscreen]="true">
 
-    
-    <ion-item class="ion-activated" button (click)="getGPS()">
-      <ion-icon name="locate-outline" slot="start"></ion-icon>      
-      <ion-list slot="start">        
-        <ion-item>
-          <ion-label>Lat/Long</ion-label>
-          <ion-badge  slot="end">{{myAPI.latitude | number:'1.2-2' }}</ion-badge>
-          <ion-badge  slot="end">{{myAPI.longitude | number:'1.2-2'}}</ion-badge>
+  <ion-grid>
+    <ion-row>
+      <ion-col size-sm>
+        <ion-item lines="none">
+          <ion-badge slot="start">Lat/Long: {{myAPI.latitude | number:'1.2-5' }} / {{myAPI.longitude | number:'1.2-5' }}</ion-badge>
+
+          <ion-badge slot="start">Counter: {{myAPI.watchCounter}}</ion-badge>
+          <ion-badge slot="start">Accuracy: {{myAPI.accuracy | number:'1.1-1'}}</ion-badge>
         </ion-item>
-        <ion-item>
-          <ion-label>Timestamp</ion-label>          
-          <ion-badge  slot="end">{{myAPI.timestamp}}</ion-badge>
-          <ion-badge  slot="end">{{myAPI.accuracy}}</ion-badge>
+      </ion-col>
+
+    </ion-row>
+    <ion-row>
+      <ion-col size-sm>
+        <ion-item class="ion-activated" lines="none">
+          <ion-icon name="barcode-outline" slot="start"></ion-icon>
+          <ion-label>Barcode</ion-label>
+          <ion-badge slot="start">{{myAPI.barcode.format}}</ion-badge>
+          <ion-badge slot="start">{{myAPI.barcode.text}}</ion-badge>
         </ion-item>
-      </ion-list> 
 
-      <ion-list slot="start">         
-        <ion-item>
-          <ion-label>Speed</ion-label>
-          <ion-badge  slot="end">{{myAPI.speed}}</ion-badge>
-        </ion-item>
-        <ion-item>
-          <ion-label>Altitude</ion-label>
-          <ion-badge  slot="end">{{myAPI.altitude}}</ion-badge>
-        </ion-item>
-      </ion-list> 
-    </ion-item>   
-    
-      
-  </ion-card>
-      <ion-fab horizontal="left" vertical="bottom" slot="fixed">
-        <ion-fab-button color="secondary">
-          <ion-icon md="caret-forward" ios="chevron-forward-circle-outline"></ion-icon>
-        </ion-fab-button>
-        
-        <ion-fab-list side="end">
-          <ion-fab-button (click)="getBarcode()">
-            <ion-icon name="barcode-outline"></ion-icon>
-          </ion-fab-button>
-      
-          <ion-fab-button (click)="addPhotoToGallery()">
-            <ion-icon name="camera-outline"></ion-icon>
-          </ion-fab-button>
+      </ion-col>
 
-          <ion-fab-button (click)="getGPS()">
-            <ion-icon name="locate-outline"></ion-icon>
-          </ion-fab-button>
+    </ion-row>
+  </ion-grid>
 
-        </ion-fab-list>
-      </ion-fab>       
 
-      <div id="mapId" style="width: 100%; height: 70%">
-      </div>
-      
- 
+  <ion-fab horizontal="left" vertical="bottom" slot="fixed">
+    <ion-fab-button color="secondary">
+      <ion-icon md="caret-forward" ios="chevron-forward-circle-outline"></ion-icon>
+    </ion-fab-button>
+
+    <ion-fab-list side="end">
+      <ion-fab-button (click)="getBarcode()">
+        <ion-icon name="barcode-outline"></ion-icon>
+      </ion-fab-button>
+
+      <ion-fab-button (click)="addPhotoToGallery()">
+        <ion-icon name="camera-outline"></ion-icon>
+      </ion-fab-button>
+
+      <ion-fab-button (click)="getGPS()">
+        <ion-icon name="locate-outline"></ion-icon>
+      </ion-fab-button>
+
+    </ion-fab-list>
+  </ion-fab>
+
+  <div id="mapId" style="width: 100%; height: 70%">
+  </div>
+
+
 </ion-content>

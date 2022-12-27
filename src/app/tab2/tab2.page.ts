@@ -14,17 +14,17 @@ export class Tab2Page {
   constructor( public myAPI: API, private socket: Socket) { }
 
   ngOnInit() {
-    this.socket.connect();
+    //this.socket.connect();
  
-    this.socket.fromEvent('loklist_data').subscribe(data => {
-      this.deviceList = JSON.parse(data['DeviceList']);
-        this.myAPI.showToast('WebSocket received');
-    });
+    //this.socket.fromEvent('loklist_data').subscribe(data => {
+    //  this.deviceList = JSON.parse(data['DeviceList']);
+    //    this.myAPI.showToast('WebSocket received');
+    //});
 
-    this.socket.fromEvent('lastDetectedImage').subscribe(data => {
-      this.myAPI.lastDetectedImage = JSON.parse(data['lastDetectedImage']);
-        this.myAPI.showToast('WebSocket received' + this.myAPI.lastDetectedImage );
-    });
+    //this.socket.fromEvent('lastDetectedImage').subscribe(data => {
+    //  this.myAPI.lastDetectedImage = JSON.parse(data['lastDetectedImage']);
+    //    this.myAPI.showToast('WebSocket received' + this.myAPI.lastDetectedImage );
+    //});
  
     //this.socket.fromEvent('message').subscribe(message => {
     //  this.messages.push(message);
@@ -36,7 +36,7 @@ export class Tab2Page {
     this.myAPI.detectCars();
   }
   getWebSocketData() {
-    this.socket.emit('test', 'hallo');
+    //this.socket.emit('test', 'hallo');
   }
 
   getGPS() {

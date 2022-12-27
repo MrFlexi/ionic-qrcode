@@ -13,14 +13,12 @@ import { HttpClient } from '@angular/common/http';
 import { HttpHeaders } from '@angular/common/http';
 import { BleClient, BleClientInterface, numbersToDataView, numberToUUID } from '@capacitor-community/bluetooth-le';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { ReusableService } from '../services/reusable.service';
 
 
 @Injectable({
   providedIn: 'root'
 })
-
-
-
 
 export class API {
   barcode: any = 'Hallo Welt';
@@ -42,9 +40,11 @@ export class API {
   sunAzimuth: any = 0;
   sunElevation: any = 0;
   gpsTrack: boolean;
+  watchCounter: number = 0;
   payload: any = "no data";
-  detectedObjects = [{ className: 'car', classCount: 26 },
-  { className: 'person', classCount: 2 }];
+  detectedObjects = [];
+  //detectedObjects = [{ className: 'car', classCount: 26 },
+  //{ className: 'person', classCount: 2 }];
 
   esp32Service = numberToUUID(0x180F); // '91bad492-b950-4226-aa2b-4ede9fa42f59';
   bmeCharacteristic = numberToUUID(0x2A19);
@@ -65,6 +65,7 @@ export class API {
 
 
   constructor(private toastCtrl: ToastController,
+    private reusableService: ReusableService,
     public httpClient: HttpClient) {
     this.getLocation();
 
@@ -72,13 +73,14 @@ export class API {
       let watchId: any;
       // Simple geolocation API check provides values to publish
       if ('geolocation' in navigator) {
-        watchId = Geolocation.watchPosition({}, (position, err) => {
+        watchId = Geolocation.watchPosition({enableHighAccuracy:true, maximumAge:2000}, (position, err) => {
           console.log('Watch', position);
           this.latitude = position.coords.latitude;
           this.longitude = position.coords.longitude;
           this.accuracy = position.coords.accuracy;
           this.speed = position.coords.speed;
           this.timestamp = position.timestamp;
+          this.watchCounter++;
 
           observer.next(position);    // Bradcast actual position
         });
@@ -97,6 +99,15 @@ export class API {
         console.log('Error Getting Location: ', msg);
       }
     });
+  }
+
+  public async getLocation() {
+    const position = await Geolocation.getCurrentPosition();
+    this.latitude = position.coords.latitude;
+    this.longitude = position.coords.longitude;
+    this.speed = position.coords.speed;
+    this.altitude = position.coords.altitude;
+    this.timestamp = position.timestamp;
   }
 
   public async getBarcode() {
@@ -144,7 +155,7 @@ export class API {
     this.yoloImageDetection(imgBlob);
   }
 
-  public yoloImageDetection(imageBlob) {
+  public async yoloImageDetection(imageBlob) {
     // Destination URL
     const url = 'http://api.szaroletta.de/upload_and_detect';
 
@@ -159,6 +170,8 @@ export class API {
     payload.append('data', JSON.stringify(dataOut));
     payload.append('image', imageBlob, 'image.jpg');
 
+    this.reusableService.simpleLoader('image detection running');
+
     this.detection = this.httpClient.post(url, payload);
     this.detection.subscribe(data => {
       this.detection = data;
@@ -167,6 +180,7 @@ export class API {
       this.detectedObjects = data['detectedObjects'];
       //this.geoLocation = data['geoLocation'];
       console.log('new url: ', this.lastDetectedImage);
+      this.reusableService.dismissLoader();
     }
     );
   }
@@ -228,15 +242,6 @@ export class API {
     );
   }
 
-
-  public async getLocation() {
-    const position = await Geolocation.getCurrentPosition();
-    this.latitude = position.coords.latitude;
-    this.longitude = position.coords.longitude;
-    this.speed = position.coords.speed;
-    this.altitude = position.coords.altitude;
-    this.timestamp = position.timestamp;
-  }
 
 
   async showToast(msg) {
