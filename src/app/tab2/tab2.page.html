@@ -10,26 +10,19 @@
 
   <ion-grid>
     <ion-row>
-      
-      <ion-col>
+      <ion-col size="12" size-md="4" >
         <div>
-          
+          <ion-img src="{{myAPI.lastPlantImage}}" width="20%" height="20%" ></ion-img> 
         </div>
       </ion-col>
 
-      <ion-col>
+      <ion-col size="12" size-md="4" >
         <div>
-          <ion-img src="{{myAPI.lastPlantImage}}" width="10%" height="10%" ></ion-img> 
+          <ion-img src="{{myAPI.lastDetectedImage}}"  ></ion-img> 
         </div>
       </ion-col>
 
-      <ion-col>
-        <div>
-          <ion-img src="{{myAPI.lastDetectedImage}}" width="10%" height="10%" ></ion-img> 
-        </div>
-      </ion-col>
-
-      <ion-col>
+      <ion-col size="12" size-md="4" >
         <div>
           <ion-list>
             <ion-item *ngFor="let item of this.myAPI.detectedObjects">
@@ -48,7 +41,7 @@
   
       
 
-  <ion-fab horizontal="center" vertical="center" slot="fixed">
+  <ion-fab horizontal="start" vertical="bottom" slot="fixed">
     <ion-fab-button color="secondary">
       <ion-icon md="caret-forward" ios="chevron-forward-circle-outline"></ion-icon>
     </ion-fab-button>
