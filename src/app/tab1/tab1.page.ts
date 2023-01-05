@@ -19,22 +19,35 @@ export class Tab1Page implements OnInit, OnDestroy {
   currentUser = '';
   private locationLayerGroup = new Leaflet.LayerGroup();
   private trackLayerGroup = new Leaflet.LayerGroup();
+  private gpsSubscription: any;
 
   constructor(public myAPI: API) {
+  }
+
+  ngOnInit() { }
+
+  ngOnDestroy() { }
+
+  ionViewDidEnter() {
+    // Initialize Leaflet Map
+    this.leafletInit();
+
     // Subscribe on GPS position updates
-    const that = this;
-    this.myAPI.geoTicker.subscribe((next) => {
+    this.gpsSubscription = this.myAPI.geoTicker.subscribe((next) => {
       console.log('UI GPS Update', next);
       this.updateGpsMapPosition(next);
     });
   }
 
-  ngOnInit() { }
-  ionViewDidEnter() { this.leafletInit(); }
-  ngOnDestroy() { }
+  ionViewWillLeave() {
+    this.map.remove();
+    this.gpsSubscription.unsubscribe();
+  }
+
+  ionViewDidLeave() {}
 
 
-  updateGpsMapPosition= (gps) => {
+  updateGpsMapPosition = (gps) => {
     const accuracy = gps.coords.accuracy;
     const position = new Leaflet.LatLng(gps.coords.latitude, gps.coords.longitude);
 
@@ -95,7 +108,6 @@ export class Tab1Page implements OnInit, OnDestroy {
     control.addTo(this.map);
     this.map.addLayer(this.locationLayerGroup);
 
-
     // layer switcher control
     const layerswitcher = new Leaflet.Control.Layers(
       {
@@ -114,9 +126,7 @@ export class Tab1Page implements OnInit, OnDestroy {
 
   }
 
-  ionViewWillLeave() {
-    this.map.remove();
-  }
+
 
   addPhotoToGallery() {
     this.myAPI.addNewToGallery();

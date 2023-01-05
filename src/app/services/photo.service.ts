@@ -42,9 +42,10 @@ export class API {
   gpsTrack: boolean;
   watchCounter: number = 0;
   payload: any = "no data";
-  detectedObjects = [];
-  //detectedObjects = [{ className: 'car', classCount: 26 },
-  //{ className: 'person', classCount: 2 }];
+  imageSize: number = 0;
+  //detectedObjects = [];
+  detectedObjects = [{ className: 'example1', classCount: 26 },
+  { className: 'example2', classCount: 2 }];
 
   esp32Service = numberToUUID(0x180F); // '91bad492-b950-4226-aa2b-4ede9fa42f59';
   bmeCharacteristic = numberToUUID(0x2A19);
@@ -142,7 +143,8 @@ export class API {
     const image = await Camera.getPhoto({
       resultType: CameraResultType.Uri,
       source: CameraSource.Camera,
-      quality: 100
+      quality: 60,
+      height: 200,
     });
     console.log('Image webPath', image.webPath);
     console.log('Image Path', image.path);
@@ -153,6 +155,8 @@ export class API {
     console.log('data:', imgBlob);
     //this.getLocation();
     this.yoloImageDetection(imgBlob);
+
+    this.imageSize = imgBlob.size / (1024 * 1024);   // MB
   }
 
   public async yoloImageDetection(imageBlob) {
