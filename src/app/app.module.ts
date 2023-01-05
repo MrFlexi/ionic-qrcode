@@ -20,8 +20,10 @@ import {HttpClient, HttpHandler, HttpClientModule} from '@angular/common/http';
   entryComponents: [],
   imports: [BrowserModule, 
             HttpClientModule,
-            IonicModule.forRoot(), AppRoutingModule,
-    SocketIoModule.forRoot(config)],
+            IonicModule.forRoot(), 
+            AppRoutingModule,
+            SocketIoModule.forRoot(config)
+  ],
   providers: [ HttpClientModule, HttpClient,
               { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
   bootstrap: [AppComponent],
