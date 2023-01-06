@@ -14,6 +14,8 @@ import { HttpHeaders } from '@angular/common/http';
 import { BleClient, BleClientInterface, numbersToDataView, numberToUUID } from '@capacitor-community/bluetooth-le';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { ReusableService } from '../services/reusable.service';
+import * as tf from '@tensorflow/tfjs';
+
 
 
 @Injectable({
@@ -74,7 +76,7 @@ export class API {
       let watchId: any;
       // Simple geolocation API check provides values to publish
       if ('geolocation' in navigator) {
-        watchId = Geolocation.watchPosition({enableHighAccuracy:true, maximumAge:2000}, (position, err) => {
+        watchId = Geolocation.watchPosition({ enableHighAccuracy: true, maximumAge: 2000 }, (position, err) => {
           console.log('Watch', position);
           this.latitude = position.coords.latitude;
           this.longitude = position.coords.longitude;
@@ -100,6 +102,26 @@ export class API {
         console.log('Error Getting Location: ', msg);
       }
     });
+
+    // Define a model for linear regression.
+    const model = tf.sequential();
+    model.add(tf.layers.dense({ units: 1, inputShape: [1] }));
+
+    console.log('Model compile');
+    model.compile({ loss: 'meanSquaredError', optimizer: 'sgd' });
+
+    // Generate some synthetic data for training.
+    const xs = tf.tensor2d([1, 2, 3, 4], [4, 1]);
+    const ys = tf.tensor2d([1, 3, 5, 7], [4, 1]);
+
+    // Train the model using the data.
+    model.fit(xs, ys, {epochs: 10}).then(() => {
+      // Use the model to do inference on a data point the model hasn't seen before:
+      const s = model.predict(tf.tensor2d([5], [1, 1])).toString();
+      console.log('Model predict:',s);
+    });
+  
+
   }
 
   public async getLocation() {
